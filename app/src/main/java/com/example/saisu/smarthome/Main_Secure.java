@@ -75,7 +75,7 @@ public class Main_Secure extends Activity implements NetworkListener  {
                 RadioButton rd2 = (RadioButton) dialog.findViewById(R.id.mode2);
 
               //  System.out.println("alaram in text field" + mAlaramTxt.getText().toString());
-               /* if (mAlaramTxt.getText().toString().equalsIgnoreCase("armaway")) {
+                if (mAlaramTxt.getText().toString().equalsIgnoreCase("armaway")) {
 
                     rd1.setText("Arm Home");
                     rd2.setText("Disaram");
@@ -83,14 +83,14 @@ public class Main_Secure extends Activity implements NetworkListener  {
                 } else if (mAlaramTxt.getText().toString().equalsIgnoreCase("armhome")) {
 
                     rd1.setText("Arm Away");
-                    rd2.setText("Disaram");*/
+                    rd2.setText("Disaram");
 
-                //} else if (mAlaramTxt.getText().toString().equalsIgnoreCase("disarm")) {
+                } else if (mAlaramTxt.getText().toString().equalsIgnoreCase("disarm")) {
 
                     rd1.setText("Arm Home");
                     rd2.setText("Arm Away");
 
-               // }
+               }
 
                 rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @Override
@@ -119,8 +119,12 @@ public class Main_Secure extends Activity implements NetworkListener  {
                 dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
                 dialog.getWindow().setGravity(Gravity.BOTTOM);
                 dialog.show();
+
+
             }
         });
+
+
     }
 
     public void getShadow(View view) {
@@ -139,29 +143,19 @@ public class Main_Secure extends Activity implements NetworkListener  {
 
         } else if (object instanceof SmartHomeStatus) {
             SmartHomeStatus smartHomeStatus = (SmartHomeStatus) object;
+           // System.out.println(smartHomeStatus.state.reported.Doors.getFrontDoor());
             mAlaramTxt = (TextView) findViewById(R.id.AlaramTxt);
             mAlaramTxt.setText(smartHomeStatus.state.reported.Controls.Alaram);
-            System.out.println("");
+            System.out.println("i am in onsuccess");
         }
     }
 
     @Override
     public void onFailure() {
-
+        System.out.println("i am in failure");
     }
 
-//    @Override
-//    public void onSuccess(Object object) {
-//
-//        if (object instanceof SmartHomeControl) {
-//            SmartHomeControl smartHomeControl = (SmartHomeControl) object;
-//        }
-//    }
-//
-//    @Override
-//    public void onFailure() {
-//
-//    }
+
 
 
 }

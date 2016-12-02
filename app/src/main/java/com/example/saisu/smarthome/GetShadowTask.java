@@ -31,8 +31,6 @@ class GetShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
             byte[] bytes = new byte[result.getPayload().remaining()];
             result.getPayload().get(bytes);
             String resultString = new String(bytes);
-
-
             return new AsyncTaskResult<String>(resultString);
         } catch (Exception e) {
             Log.e("E", "getShadowTask", e);
@@ -78,6 +76,9 @@ class GetShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
     private void smarthomeStatusUpdated(String smarthomeStatusState) {
         Gson gson = new Gson();
         SmartHomeStatus ts = gson.fromJson(smarthomeStatusState, SmartHomeStatus.class);
+        if (mNetworkListener != null) {
+            mNetworkListener.onSuccess(ts);
+        }
         Log.i(LOG_TAG,  ts.state.reported.Doors.FrontDoor);
         Log.i(LOG_TAG,  ts.state.reported.Doors.BackDoor);
         Log.i(LOG_TAG,  ts.state.reported.Doors.SideDoor);

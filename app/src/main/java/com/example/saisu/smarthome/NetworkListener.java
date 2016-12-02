@@ -5,6 +5,7 @@ package com.example.saisu.smarthome;
  */
 
 public interface NetworkListener {
+
     void onSuccess(Object object);
     void onFailure();
 }

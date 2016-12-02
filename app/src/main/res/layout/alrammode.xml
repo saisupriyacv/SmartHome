@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:orientation="vertical"
+    android:layout_width="800px"
+    android:layout_height="600px"
+    android:text="Security Mode"
+    tools:ignore="HardcodedText,PxUsage">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Security Mode"
+        android:textSize="18sp"
+        android:layout_gravity="center_horizontal"
+        />
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/group">
+    <RadioButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/mode1" />
+
+    <RadioButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/mode2" />
+    </RadioGroup>
+
+    <Button
+        android:text='"ok"'
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ok" />
+
+
+    </LinearLayout>

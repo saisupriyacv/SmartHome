@@ -44,33 +44,12 @@ import java.security.KeyStore;
 import java.util.UUID;
 
 
-public class Main_Secure extends FragmentActivity implements NetworkListener {
+public class Main_Secure extends FragmentActivity implements NetworkListener, ClientMqttStatusListener {
 
     private static final String LOG_TAG = Main_Secure.class.getCanonicalName();
     ImageView mAlaram;
     TextView mAlaramTxt;
     Button btn;
-
-
-    // --- Constants to modify per your configuration ---
-
-    // IoT endpoint
-    // AWS Iot CLI describe-endpoint call returns: XXXXXXXXXX.iot.<region>.amazonaws.com
-    private static final String CUSTOMER_SPECIFIC_ENDPOINT = "a2kc9la4cp40qj.iot.us-east-1.amazonaws.com";
-    // Cognito pool ID. For this app, pool needs to be unauthenticated pool with
-    // AWS IoT permissions.
-    private static final String COGNITO_POOL_ID = "us-east-1:63486043-e999-4cc0-8d1c-c6b6423e1f3a";
-    // Name of the AWS IoT policy to attach to a newly created certificate
-    private static final String AWS_IOT_POLICY_NAME = "SmartHome-Policy";
-
-    // Region of AWS IoT
-    private static final Regions MY_REGION = Regions.US_EAST_1;
-    // Filename of KeyStore file on the filesystem
-    private static final String KEYSTORE_NAME = "iot_keystore";
-    // Password for the private key in the KeyStore
-    private static final String KEYSTORE_PASSWORD = "password";
-    // Certificate and key aliases in the KeyStore
-    private static final String CERTIFICATE_ID = "default";
 
 
     final Context context = Main_Secure.this;
@@ -92,12 +71,7 @@ public class Main_Secure extends FragmentActivity implements NetworkListener {
 
     String result;
     String SelectedText;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
-
+    final String topic = "$aws/things/SmartHome/shadow/update";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +80,7 @@ public class Main_Secure extends FragmentActivity implements NetworkListener {
         SmartHomeStatus smartHomeStatus;
 
         Authnticate.getInstance().createConnection(getApplicationContext());
+
         Button btn = (Button) findViewById(R.id.button1);
 
         btn.setOnClickListener(new View.OnClickListener() {
@@ -129,56 +104,16 @@ public class Main_Secure extends FragmentActivity implements NetworkListener {
             }
         });
 
-
-        // MQTT client IDs are required to be unique per AWS IoT account.
-        // This UUID is "practically unique" but does not _guarantee_
-        // uniqueness.
-        clientId = UUID.randomUUID().toString();
-        // tvClientId.setText(clientId);
-        Log.i(LOG_TAG, "ClientId " + clientId);
-
-        // Initialize the AWS Cognito credentials provider
-        credentialsProvider = new CognitoCachingCredentialsProvider(
-                getApplicationContext(), // context
-                COGNITO_POOL_ID, // Identity Pool ID
-                MY_REGION // Region
-        );
-
-        Region region = Region.getRegion(MY_REGION);
-
-        // MQTT Client
-        mqttManager = new AWSIotMqttManager(clientId, CUSTOMER_SPECIFIC_ENDPOINT);
-
-        // Set keepalive to 10 seconds.  Will recognize disconnects more quickly but will also send
-        // MQTT pings every 10 seconds.
-        mqttManager.setKeepAlive(10);
-
-        // Set Last Will and Testament for MQTT.  On an unclean disconnect (loss of connection)
-        // AWS IoT will publish this message to alert other clients.
-        AWSIotMqttLastWillAndTestament lwt = new AWSIotMqttLastWillAndTestament("my/lwt/topic",
-                "Android client lost connection", AWSIotMqttQos.QOS0);
-        mqttManager.setMqttLastWillAndTestament(lwt);
-
-        // IoT Client (for creation of certificate if needed)
-        mIotAndroidClient = new AWSIotClient(credentialsProvider);
-        mIotAndroidClient.setRegion(region);
-
-        keystorePath = getFilesDir().getPath();
-        keystoreName = KEYSTORE_NAME;
-        keystorePassword = KEYSTORE_PASSWORD;
-        certificateId = CERTIFICATE_ID;
-
-
         // To load cert/key from keystore on filesystem
         try {
-            if (AWSIotKeystoreHelper.isKeystorePresent(keystorePath, keystoreName)) {
-                if (AWSIotKeystoreHelper.keystoreContainsAlias(certificateId, keystorePath,
-                        keystoreName, keystorePassword)) {
-                    Log.i(LOG_TAG, "Certificate " + certificateId
+            if (AWSIotKeystoreHelper.isKeystorePresent(Constants.KEY_STORE_PATH, Constants.KEYSTORE_NAME)) {
+                if (AWSIotKeystoreHelper.keystoreContainsAlias(Constants.CERTIFICATE_ID, Constants.KEY_STORE_PATH,
+                        Constants.KEYSTORE_NAME, Constants.KEYSTORE_PASSWORD)) {
+                    Log.i(LOG_TAG, "Certificate " + Constants.CERTIFICATE_ID
                             + " found in keystore - using for MQTT.");
                     // load keystore from file into memory to pass on connection
-                    clientKeyStore = AWSIotKeystoreHelper.getIotKeystore(certificateId,
-                            keystorePath, keystoreName, keystorePassword);
+                    clientKeyStore = AWSIotKeystoreHelper.getIotKeystore(Constants.CERTIFICATE_ID,
+                            Constants.KEY_STORE_PATH, Constants.KEYSTORE_NAME, Constants.KEYSTORE_PASSWORD);
 
                 } else {
                     Log.i(LOG_TAG, "Key/cert " + certificateId + " not found in keystore.");
@@ -192,143 +127,48 @@ public class Main_Secure extends FragmentActivity implements NetworkListener {
 
         if (clientKeyStore == null) {
             Log.i(LOG_TAG, "Cert/key was not found in keystore - creating new key and certificate.");
-
-            new Thread(new Runnable() {
+            new VerifyCertificateTask(this).execute();
+        } else {
+            ShadowApplication.getInstance().getIotManager().connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
                 @Override
-                public void run() {
-                    try {
-                        // Create a new private key and certificate. This call
-                        // creates both on the server and returns them to the
-                        // device.
-                        CreateKeysAndCertificateRequest createKeysAndCertificateRequest =
-                                new CreateKeysAndCertificateRequest();
-                        createKeysAndCertificateRequest.setSetAsActive(true);
-                        final CreateKeysAndCertificateResult createKeysAndCertificateResult;
-                        createKeysAndCertificateResult =
-                                mIotAndroidClient.createKeysAndCertificate(createKeysAndCertificateRequest);
-                        Log.i(LOG_TAG,
-                                "Cert ID: " +
-                                        createKeysAndCertificateResult.getCertificateId() +
-                                        " created.");
-
-                        // store in keystore for use in MQTT client
-                        // saved as alias "default" so a new certificate isn't
-                        // generated each run of this application
-                        AWSIotKeystoreHelper.saveCertificateAndPrivateKey(certificateId,
-                                createKeysAndCertificateResult.getCertificatePem(),
-                                createKeysAndCertificateResult.getKeyPair().getPrivateKey(),
-                                keystorePath, keystoreName, keystorePassword);
-
-                        // load keystore from file into memory to pass on
-                        // connection
-                        clientKeyStore = AWSIotKeystoreHelper.getIotKeystore(certificateId,
-                                keystorePath, keystoreName, keystorePassword);
-
-                        // Attach a policy to the newly created certificate.
-                        // This flow assumes the policy was already created in
-                        // AWS IoT and we are now just attaching it to the
-                        // certificate.
-                        AttachPrincipalPolicyRequest policyAttachRequest =
-                                new AttachPrincipalPolicyRequest();
-                        policyAttachRequest.setPolicyName(AWS_IOT_POLICY_NAME);
-                        policyAttachRequest.setPrincipal(createKeysAndCertificateResult
-                                .getCertificateArn());
-                        mIotAndroidClient.attachPrincipalPolicy(policyAttachRequest);
-
-
-                    } catch (Exception e) {
-                        Log.e(LOG_TAG,
-                                "Exception occurred when generating new private key and certificate.",
-                                e);
-                    }
-                }
-            }).start();
-        }
-
-
-        ///// Connecting to Server creating a UI Thread ///////////////////////////
-        Log.d(LOG_TAG, "clientId = " + clientId);
-
-        try {
-            mqttManager.connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
-                @Override
-                public void onStatusChanged(final AWSIotMqttClientStatus status,
-                                            final Throwable throwable) {
-                    Log.d(LOG_TAG, "Status = " + String.valueOf(status));
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (status == AWSIotMqttClientStatus.Connecting) {
-
-                                Log.d(LOG_TAG, "Connecting....");
-
-                            } else if (status == AWSIotMqttClientStatus.Connected) {
-
-                                Log.d(LOG_TAG, "Connected");
-                                // mJsonTxt = (TextView) findViewById(R.id.textView2);
-
-//////////////////Subscribing to the topic//////////////////////////
-                                final String topic = "$aws/things/SmartHome/shadow/delta";
-
-                                Log.d(LOG_TAG, "topic = " + topic);
-
-                                Toast.makeText(Main_Secure.this,
-                                        "to be done",
-                                        Toast.LENGTH_SHORT).show();
-
-                                try {
-                                    mqttManager.subscribeToTopic(topic, AWSIotMqttQos.QOS0,
-                                            new AWSIotMqttNewMessageCallback() {
+                public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
+                    String clientStatus = "";
+                    Log.i("", "Client status : " + status.name());
+                    if (status == AWSIotMqttClientStatus.Connected) {
+                        clientStatus = Constants.CONNECTED;
+                        try {
+                            ShadowApplication.getInstance().getIotManager().subscribeToTopic(topic, AWSIotMqttQos.QOS0,
+                                    new AWSIotMqttNewMessageCallback() {
+                                        @Override
+                                        public void onMessageArrived(final String topic, final byte[] data) {
+                                            runOnUiThread(new Runnable() {
                                                 @Override
-                                                public void onMessageArrived(final String topic, final byte[] data) {
-                                                    runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            try {
-                                                                String message = new String(data, "UTF-8");
-                                                                Log.d(LOG_TAG, "Message arrived:");
-                                                                Log.d(LOG_TAG, "   Topic: " + topic);
-                                                                Log.d(LOG_TAG, " Message: " + message);
+                                                public void run() {
+                                                    try {
+                                                        String message = new String(data, "UTF-8");
+                                                        Log.d(LOG_TAG, "Message arrived:");
+                                                        Log.d(LOG_TAG, "   Topic: " + topic);
+                                                        Log.d(LOG_TAG, " Message: " + message);
 
-                                                            } catch (UnsupportedEncodingException e) {
-                                                                Log.e(LOG_TAG, "Message encoding error.", e);
-                                                            }
-                                                        }
-                                                    });
+                                                    } catch (UnsupportedEncodingException e) {
+                                                        Log.e(LOG_TAG, "Message encoding error.", e);
+                                                    }
                                                 }
                                             });
-                                } catch (Exception e) {
-                                    Log.e(LOG_TAG, "Subscription error.", e);
-                                }
-
-
-                            } else if (status == AWSIotMqttClientStatus.Reconnecting) {
-                                if (throwable != null) {
-                                    Log.e(LOG_TAG, "Connection error.", throwable);
-                                }
-                                // tvStatus.setText("Reconnecting");
-                            } else if (status == AWSIotMqttClientStatus.ConnectionLost) {
-                                if (throwable != null) {
-                                    Log.e(LOG_TAG, "Connection error.", throwable);
-                                }
-
-                                Log.d(LOG_TAG, "Disconnected");
-                            } else {
-
-                                Log.d(LOG_TAG, "Disconnected");
-                                result = "Disconnected";
-
-                            }
+                                        }
+                                    });
+                        } catch (Exception e) {
+                            Log.e(LOG_TAG, "Subscription error.", e);
                         }
-                    });
+                    } else {
+                        clientStatus = Constants.INVALID;
+                    }
+
+
+
                 }
             });
-        } catch (final Exception e) {
-            Log.e(LOG_TAG, "Connection error." + e.getMessage());
-
         }
-
 
         mAlaram = (ImageView) findViewById(R.id.Alaram);
         executeShadowTask();
@@ -348,15 +188,15 @@ public class Main_Secure extends FragmentActivity implements NetworkListener {
                final RadioButton rd2 = (RadioButton) dialog.findViewById(R.id.mode2);
 
                 //  System.out.println("alaram in text field" + mAlaramTxt.getText().toString());
-                if (mAlaramTxt.getText().toString().equalsIgnoreCase("armaway")) {
+                if (mAlaramTxt.getText().toString().equalsIgnoreCase("arm away")) {
 
                     rd1.setText("Arm Home");
-                    rd2.setText("Disaram");
+                    rd2.setText("Disarm");
 
-                } else if (mAlaramTxt.getText().toString().equalsIgnoreCase("armhome")) {
+                } else if (mAlaramTxt.getText().toString().equalsIgnoreCase("arm home")) {
 
                     rd1.setText("Arm Away");
-                    rd2.setText("Disaram");
+                    rd2.setText("Disarm");
 
                 } else if (mAlaramTxt.getText().toString().equalsIgnoreCase("disarm")) {
 
@@ -474,7 +314,14 @@ public class Main_Secure extends FragmentActivity implements NetworkListener {
     }
 
 
+    @Override
+    public void onStatusUpdate(String status) {
 
+        if (status == Constants.CONNECTED) {
+            //
+
+        }
+    }
 }
 
 

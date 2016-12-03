@@ -22,6 +22,8 @@ class GetShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
         mNetworkListener = networkListener;
     }
 
+
+
     @Override
     protected AsyncTaskResult<String> doInBackground(Void... voids) {
         try {

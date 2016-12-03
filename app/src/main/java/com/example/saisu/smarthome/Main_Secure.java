@@ -87,9 +87,11 @@ public class Main_Secure extends FragmentActivity implements NetworkListener {
 
     TextView mJsonTxt;
 
+
     CognitoCachingCredentialsProvider credentialsProvider;
 
     String result;
+    String SelectedText;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -342,8 +344,8 @@ public class Main_Secure extends FragmentActivity implements NetworkListener {
                 dialog.setTitle(R.string.title);
 
                 final RadioGroup rg = (RadioGroup) dialog.findViewById(R.id.group);
-                RadioButton rd1 = (RadioButton) dialog.findViewById(R.id.mode1);
-                RadioButton rd2 = (RadioButton) dialog.findViewById(R.id.mode2);
+               final RadioButton rd1 = (RadioButton) dialog.findViewById(R.id.mode1);
+               final RadioButton rd2 = (RadioButton) dialog.findViewById(R.id.mode2);
 
                 //  System.out.println("alaram in text field" + mAlaramTxt.getText().toString());
                 if (mAlaramTxt.getText().toString().equalsIgnoreCase("armaway")) {
@@ -362,12 +364,25 @@ public class Main_Secure extends FragmentActivity implements NetworkListener {
                     rd2.setText("Arm Away");
 
                 }
+                final SmartHomeStatus update = (SmartHomeStatus) GetObject();
 
                 rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
+
                         int id = rg.getCheckedRadioButtonId();
-                        // updtae id.gettext to shadow.
+                        if(rd1.isChecked()) {
+                            update.state.reported.Controls.setAlaram(rd1.getText().toString());
+                            SelectedText = rd1.getText().toString();
+                            Log.d(LOG_TAG, "button selected " + rd1.getText());
+                        }
+                        else if(rd2.isChecked()){
+                            update.state.reported.Controls.setAlaram(rd2.getText().toString());
+                            SelectedText = rd2.getText().toString();
+                            Log.d(LOG_TAG, "button selected " + rd2.getText());
+
+                        }
+                           // updtae id.gettext to shadow.
                     }
                 });
                 Button ok = (Button) dialog.findViewById(R.id.ok);
@@ -376,6 +391,11 @@ public class Main_Secure extends FragmentActivity implements NetworkListener {
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
+                        mAlaramTxt.setText(SelectedText+" " +  "Setting "+"......");
+                        Log.d(LOG_TAG, "Text changed on Ok " + rd2.getText());
+                        String newState = String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"%s\"}}}}", SelectedText);
+                        Log.i(LOG_TAG, newState);
+                        executeUpdateShadowTask(newState);
 
                     /*    ProgressDialog dialog1 = ProgressDialog.show(
                                 context,
@@ -398,13 +418,6 @@ public class Main_Secure extends FragmentActivity implements NetworkListener {
 
 
     }
-
-
-
-
-
-
-
     public void getShadow(View view) {
         executeShadowTask();
     }
@@ -413,18 +426,31 @@ public class Main_Secure extends FragmentActivity implements NetworkListener {
         GetShadowTask getStatusShadowTask = new GetShadowTask("SmartHome", this);
         getStatusShadowTask.execute();
     }
+    public void executeUpdateShadowTask(String newState){
+        UpdateShadowTask updateShadowTask = new UpdateShadowTask(this);
+        updateShadowTask.setState(newState);
+        updateShadowTask.execute();
+
+
+    }
 
     @Override
     public void onSuccess(Object object) {
-        if (object instanceof SmartHomeControl) {
+        if (object instanceof SmartHomeControl)
+        {
             SmartHomeControl smartHomeControl = (SmartHomeControl) object;
 
-        } else if (object instanceof SmartHomeStatus) {
+        }
+        if (object instanceof SmartHomeStatus) {
             SetObject(object);
             SmartHomeStatus smartHomeStatus = (SmartHomeStatus) object;
-            // System.out.println(smartHomeStatus.state.reported.Doors.getFrontDoor());
+
+            System.out.println(smartHomeStatus.state.reported.Controls.Alaram);
+
             mAlaramTxt = (TextView) findViewById(R.id.AlaramTxt);
             mAlaramTxt.setText(smartHomeStatus.state.reported.Controls.getAlaram());
+            // System.out.println(smartHomeStatus.state.reported.Doors.getFrontDoor());
+
             System.out.println("i am in onsuccess");
         }
     }

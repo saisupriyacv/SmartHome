@@ -78,7 +78,7 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main__secure);
         SmartHomeStatus smartHomeStatus;
-
+        //Cognito Pool Authentications
         Authnticate.getInstance().createConnection(getApplicationContext());
 
         Button btn = (Button) findViewById(R.id.button1);
@@ -129,10 +129,13 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
             Log.i(LOG_TAG, "Cert/key was not found in keystore - creating new key and certificate.");
             new VerifyCertificateTask(this).execute();
         } else {
-            ShadowApplication.getInstance().getIotManager().connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
-                @Override
-                public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
+
+           ShadowApplication.getInstance().getIotManager().connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
+             @Override
+            public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
+
                     String clientStatus = "";
+                    onStatusUpdate(clientStatus);
                     Log.i("", "Client status : " + status.name());
                     if (status == AWSIotMqttClientStatus.Connected) {
                         clientStatus = Constants.CONNECTED;
@@ -161,12 +164,12 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
                             Log.e(LOG_TAG, "Subscription error.", e);
                         }
                     } else {
-                        clientStatus = Constants.INVALID;
+                        Log.d(LOG_TAG, "Not Subscribed as client not connected");
                     }
 
 
 
-                }
+               }
             });
         }
 
@@ -234,7 +237,7 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
                         mAlaramTxt.setText(SelectedText+" " +  "Setting "+"......");
                         Log.d(LOG_TAG, "Text changed on Ok " + rd2.getText());
                         String newState = String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"%s\"}}}}", SelectedText);
-                        Log.i(LOG_TAG, newState);
+                        Log.i(LOG_TAG, "Subscribed result: " + newState);
                         executeUpdateShadowTask(newState);
 
                     /*    ProgressDialog dialog1 = ProgressDialog.show(

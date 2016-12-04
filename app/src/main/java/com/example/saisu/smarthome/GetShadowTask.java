@@ -33,6 +33,7 @@ class GetShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
             byte[] bytes = new byte[result.getPayload().remaining()];
             result.getPayload().get(bytes);
             String resultString = new String(bytes);
+            Log.d(LOG_TAG,"Get thing shadow request");
             return new AsyncTaskResult<String>(resultString);
         } catch (Exception e) {
             Log.e("E", "getShadowTask", e);
@@ -45,11 +46,13 @@ class GetShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
         if (result.getError() == null) {
             Log.i(GetShadowTask.class.getSimpleName(), result.getResult());
             if ("SmartHomeControl".equals(thingName)) {
+                Log.d(LOG_TAG,"Smart home control status call back");
                 smarthomeControlUpdated(result.getResult());
             } else if ("SmartHome".equals(thingName)) {
                 smarthomeStatusUpdated(result.getResult());
+                Log.d(LOG_TAG,"Smart home control status updated call back");
             }
-            System.out.println(result.getResult());
+
         } else {
             Log.e(GetShadowTask.class.getCanonicalName(), "getShadowTask", result.getError());
         }
@@ -60,17 +63,15 @@ class GetShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
         SmartHomeControl tc = gson.fromJson(smarthomeControlState, SmartHomeControl.class);
         if (mNetworkListener != null) {
             mNetworkListener.onSuccess(tc);
+            Log.d(LOG_TAG,"Call back from mNetworkListner to main activity on success");
+
         }
-        // mNetwo.onSuccess(tc)
+        else{
+            mNetworkListener.onFailure();
+            Log.d(LOG_TAG,"Call back from mNetworkListner to main activity on failure");
 
-        //// Log.i(LOG_TAG, String.format("setPoint: %d", tc.state.desired.setPoint));
-        //Log.i(LOG_TAG, String.format("enabled: %b", tc.state.desired.enabled));
+        }
 
-        /*NumberPicker np = (NumberPicker) findViewById(R.id.setpoint);
-        np.setValue(tc.state.desired.setPoint);
-
-        ToggleButton tb = (ToggleButton) findViewById(R.id.enableButton);
-        tb.setChecked(tc.state.desired.enabled);*/
     }
 
 
@@ -81,11 +82,11 @@ class GetShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
         if (mNetworkListener != null) {
             mNetworkListener.onSuccess(ts);
         }
-        Log.i(LOG_TAG,  ts.state.reported.Doors.FrontDoor);
-        Log.i(LOG_TAG,  ts.state.reported.Doors.BackDoor);
-        Log.i(LOG_TAG,  ts.state.reported.Doors.SideDoor);
-        Log.i(LOG_TAG,  ts.state.reported.Controls.Alaram);
-        Log.i(LOG_TAG,  ts.state.reported.Controls.Switch);
+        else{
+            mNetworkListener.onFailure();
+            Log.d(LOG_TAG,"Call back from mNetworkListner to main activity on failure");
+
+        }
 
     }
 

@@ -7,7 +7,11 @@ package com.example.saisu.smarthome;
 public class Constants {
 
     public static final String CONNECTED = "Connected";
-    public static final String INVALID = "invalid";
+    public static final String CONNECTING = "CONNECTING";
+    public static final String Reconnecting = "Reconnecting";
+    public static final String ConnectionLost = "ConnectionLost";
+
+    public static final String INVALID = "Invalid";
     // Filename of KeyStore file on the filesystem
     public static final String KEYSTORE_NAME = "iot_keystore";
     // Password for the private key in the KeyStore

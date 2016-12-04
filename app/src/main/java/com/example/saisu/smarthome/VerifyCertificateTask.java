@@ -20,6 +20,7 @@ import java.security.KeyStore;
 public class VerifyCertificateTask extends AsyncTask<Void, Void, KeyStore> {
 
     public ClientMqttStatusListener statusListener;
+    String TAG = VerifyCertificateTask.class.getSimpleName();
 
     public VerifyCertificateTask(ClientMqttStatusListener statusListener) {
         AWSIotMqttLastWillAndTestament lwt = new AWSIotMqttLastWillAndTestament("my/lwt/topic",
@@ -68,6 +69,7 @@ public class VerifyCertificateTask extends AsyncTask<Void, Void, KeyStore> {
             policyAttachRequest.setPrincipal(createKeysAndCertificateResult
                     .getCertificateArn());
             mIotAndroidClient.attachPrincipalPolicy(policyAttachRequest);
+         Log.d(TAG,"Key store Created");
 
         return clientKeyStore;
     }
@@ -80,12 +82,30 @@ public class VerifyCertificateTask extends AsyncTask<Void, Void, KeyStore> {
             public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
                 String clientStatus = "";
                 Log.i("", "Client status : " + status.name());
-                if (status == AWSIotMqttClientStatus.Connected) {
+                if(status == AWSIotMqttClientStatus.Connecting )
+                {
+                    clientStatus = Constants.CONNECTING;
+                    Log.d(TAG,"Constants.CONNECTING");
+                }
+                else if (status == AWSIotMqttClientStatus.Connected) {
                     clientStatus = Constants.CONNECTED;
+                    Log.d(TAG,"Constants.CONNECTED" + "Successfully");
+                }
+                else if(status == AWSIotMqttClientStatus.Reconnecting)
+                {
+                    clientStatus = Constants.Reconnecting;
+                    Log.d(TAG,"Constants.RECONNECTING");
+                }
+                else if(status == AWSIotMqttClientStatus.ConnectionLost)
+                {
+                    clientStatus = Constants.ConnectionLost;
+                    Log.d(TAG,"Constants.ConnectionLost");
+                }
 
 
-                } else {
+                else {
                     clientStatus = Constants.INVALID;
+                    Log.d(TAG,"Constants.INVALID" );
                 }
 
 

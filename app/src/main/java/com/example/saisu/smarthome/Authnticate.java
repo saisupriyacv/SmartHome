@@ -21,6 +21,7 @@ public class Authnticate {
     private static final String COGNITO_POOL_ID = "us-east-1:63486043-e999-4cc0-8d1c-c6b6423e1f3a";
     // Region of AWS IoT
     private static final Regions MY_REGION = Regions.US_EAST_1;
+    private static final String TAG = Authnticate.class.getSimpleName();
 
 
 
@@ -55,6 +56,7 @@ public class Authnticate {
         String iotDataEndpoint = CUSTOMER_SPECIFIC_ENDPOINT;
         iotDataClient.setEndpoint(iotDataEndpoint);
         setIotDataClient(iotDataClient);
+        Log.d(TAG, "Authenticating Congnitoo Pool Credentials" );
 
         // crete connection
     }

@@ -10,6 +10,9 @@ package com.example.saisu.smarthome;
                   "BackDoor": \"%s\",
                   "SideDoor": \"%s\"
                 },
+                "Temperature": {
+                    "LivingRoom": "81.0"
+                },
                 "Controls":{
                   "Switch":  \"%s\",
                   "Alaram":  \"%s\"
@@ -41,18 +44,14 @@ public class SmartHomeStatus {
         public class  Reported  {
             Door Doors;
             Control Controls;
+            Temp Temperature;
 
 
             Reported() {
                 Doors = new Door();
                 Controls = new Control();
-
-
-
-
+                Temperature = new Temp();
             }
-
-
         }
         public class Door{
 
@@ -111,6 +110,17 @@ public class SmartHomeStatus {
             public void setAlaram(String alaram) {
                 Alaram = alaram;
             }
+        }
+
+        public class Temp{
+
+            public String gettemperature() {
+                return Temperature;
+            }
+            Temp(){
+            }
+
+            String Temperature;
         }
     }
 

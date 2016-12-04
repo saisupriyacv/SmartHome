@@ -24,7 +24,11 @@
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,21 +40,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="button1"
+            android:text="@string/btn_label1"
             android:id="@+id/button1"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="button2"/>
+            android:text="@string/btn_label2"
+            android:id="@+id/button2"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="button3"/>
+
+
     </LinearLayout>
- </RelativeLayout>
+
+
+</RelativeLayout>
 
 
 

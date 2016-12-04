@@ -81,28 +81,25 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
         //Cognito Pool Authentications
         Authnticate.getInstance().createConnection(getApplicationContext());
 
-        Button btn = (Button) findViewById(R.id.button1);
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                FragmentManager fm = getSupportFragmentManager();
-                Fragment fragment = fm.findFragmentById(R.id.frame_container);
-
-                if(fragment == null)
-                {
-
-                    fragment = new AlaramFragment();
-                    fm.beginTransaction()
-                            .add(R.id.frame_container, fragment)
-                            .commit();
-
+        View.OnClickListener listener = new View.OnClickListener() {
+            public void onClick(View view) {
+                Fragment fragment = null;
+                if(view == findViewById(R.id.button1)){
+                    fragment = new DoorFragment();
+                } else {
+                    fragment = new SwitchFragment();
                 }
-
-
+                FragmentManager manager = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.frame_container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
-        });
+        };
+        Button btn1 = (Button)findViewById(R.id.button1);
+        btn1.setOnClickListener(listener);
+        Button btn2 = (Button)findViewById(R.id.button2);
+        btn2.setOnClickListener(listener);
 
         // To load cert/key from keystore on filesystem
         try {

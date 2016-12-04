@@ -2,4 +2,6 @@
     <string name="app_name">SmartHome</string>
     <string name="action_settings">Settings</string>
     <string name="title">Security</string>
+    <string name="btn_label1"> Door Status </string>
+    <string name="btn_label2"> Switch Control </string>
 </resources>

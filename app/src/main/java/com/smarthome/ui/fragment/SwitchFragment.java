@@ -46,12 +46,12 @@ public class SwitchFragment extends BaseFragment {
 
                 if(isChecked){
 
-                    String newState = String.format("{\"state\":{\"desired\":{\"Controls\":{\"Switch\":\"%s\"}}}}", "on");
+                    String newState =  String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"nop\",\"Switch\":\"on\"}}}}");
                     ((SecureMainActivity)getActivity()).executeUpdateShadowTask(newState);
                    // getActivity().
                 }else{
 
-                    String newState = String.format("{\"state\":{\"desired\":{\"Controls\":{\"Switch\":\"%s\"}}}}", "off");
+                    String newState =  String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"nop\",\"Switch\":\"off\"}}}}");
                     ((SecureMainActivity)getActivity()).executeUpdateShadowTask(newState);
 
                 }

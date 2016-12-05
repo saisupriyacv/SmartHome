@@ -6,17 +6,14 @@ import android.util.Log;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttNewMessageCallback;
 import com.google.gson.Gson;
 import com.smarthome.ShadowApplication;
-import com.smarthome.network.model.SmartHomeStatus;
 import com.smarthome.ui.activity.SecureMainActivity;
 import com.smarthome.ui.listener.NetworkListener;
 
 import java.io.UnsupportedEncodingException;
 
-/**
- * Created by sukesh.venkata on 12/4/16.
- */
 
-public class SubscribeToTopic implements AWSIotMqttNewMessageCallback {
+
+public class SubscribeToTopic implements AWSIotMqttNewMessageCallback  {
 
     private static final String TAG = SubscribeToTopic.class.getSimpleName();
 
@@ -32,7 +29,7 @@ public class SubscribeToTopic implements AWSIotMqttNewMessageCallback {
 
     private String topic;
 
-    private NetworkListener mnetworkListner;
+     private NetworkListener mnetworkListner;
 
     private Activity mActivity;
 
@@ -59,11 +56,10 @@ public class SubscribeToTopic implements AWSIotMqttNewMessageCallback {
                     Log.d(TAG, " Topic: " + mTopic);
                     Log.d(TAG, " Message: " + message);
                     ((SecureMainActivity)mActivity).executeShadowTask();
-//                   if (mnetworkListner != null) {
-//                        mnetworkListner.onSuccess(ts);
-//                    }
                     if(ShadowApplication.getInstance().isMisActivitypassed()){
-                        // Notification bui ld
+
+
+                       ((SecureMainActivity) mActivity).Notify("hi","hello");
                     }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();

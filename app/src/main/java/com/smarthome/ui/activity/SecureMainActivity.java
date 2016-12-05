@@ -1,6 +1,10 @@
 package com.smarthome.ui.activity;
 
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -53,6 +57,9 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
 
     private String SelectedText;
 
+    NotificationManager manager;
+    Notification myNotication;
+
     private SubscribeToTopic subscribeToTopic;
     private final String topic = "$aws/things/SmartHome/shadow/update";
 
@@ -61,6 +68,7 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main__secure);
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         //Cognito Pool Authentications
         Authenticate.getInstance().createConnection(getApplicationContext());
 
@@ -180,7 +188,7 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
                         dialog.dismiss();
                         mAlaramTxt.setText(SelectedText + " " + "Setting " + "......");
                         Log.d(LOG_TAG, "Text changed on Ok " + rd2.getText());
-                        String newState = String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"%s\"}}}}", SelectedText);
+                        String newState = String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"%s\",\"Switch\":\"nop\"}}}}", SelectedText);
                         Log.i(LOG_TAG, "Sending data to shadow: " + newState);
                         executeUpdateShadowTask(newState);
 
@@ -277,8 +285,32 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
 
     public void connectIotManager() {
         ShadowApplication.getInstance().getIotManager().connect(clientKeyStore,
-                new SecureAWSIotMqttClientManager(SecureMainActivity.this));
+                new SecureAWSIotMqttClientManager(this));
     }
+
+
+    public void Notify(String notificationTitle, String notificationMessage){
+
+
+        Intent intent = new Intent(this, NotificationReceiverActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+
+        Notification noti = new Notification.Builder(this)
+                               .setContentTitle("Smart Home Alert message " )
+                                .setContentText("Door Open").setSmallIcon(R.drawable.alarm)
+                                .setContentIntent(pIntent)
+                                .addAction(R.drawable.alarm, "View", pIntent).build();
+                        // Notification bui ld
+
+                       // NotificationManager notificationManager = (NotificationManager) mActivity.getSystemService(NOTIFICATION_SERVICE);
+                        noti.flags |= Notification.FLAG_AUTO_CANCEL;
+                        manager.notify(0, noti);
+                         Log.d(LOG_TAG, "Notifying Message");
+
+    }
+
+
+
 }
 
 

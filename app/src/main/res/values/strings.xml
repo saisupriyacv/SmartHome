@@ -17,4 +17,5 @@
     <string name="emailhint">Email</string>
     <string name="send_requestButton">Send Request</string>
     <string name="cancelButton">Cancel</string>
+    <string name="title_activity_notification_receiver">NotificationReceiverActivity</string>
 </resources>

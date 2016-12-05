@@ -1,4 +1,4 @@
-package com.example.saisu.smarthome;
+package com.smarthome;
 
 import android.app.Application;
 

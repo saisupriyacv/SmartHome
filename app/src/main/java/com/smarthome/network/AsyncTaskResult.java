@@ -1,4 +1,4 @@
-package com.example.saisu.smarthome;
+package com.smarthome.network;
 
 /**
  * Created by cvssa on 11/28/2016.

@@ -1,13 +1,9 @@
+package com.smarthome.ui.activity;
 
-package com.example.saisu.smarthome;
-
-import android.app.Activity;
 import android.app.Dialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -18,68 +14,50 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.iot.AWSIotKeystoreHelper;
-import com.amazonaws.mobileconnectors.iot.AWSIotMqttClientStatusCallback;
-import com.amazonaws.mobileconnectors.iot.AWSIotMqttLastWillAndTestament;
-import com.amazonaws.mobileconnectors.iot.AWSIotMqttManager;
-import com.amazonaws.mobileconnectors.iot.AWSIotMqttNewMessageCallback;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.iot.AWSIotClient;
-import com.amazonaws.services.iot.model.AttachPrincipalPolicyRequest;
-import com.amazonaws.services.iot.model.CreateKeysAndCertificateRequest;
-import com.amazonaws.services.iot.model.CreateKeysAndCertificateResult;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.smarthome.data.SubscribeToTopic;
+import com.smarthome.network.GetShadowTask;
+import com.smarthome.network.UpdateShadowTask;
+import com.smarthome.ui.SecureAWSIotMqttClientManager;
+import com.smarthome.data.Authenticate;
+import com.smarthome.ui.fragment.DoorFragment;
+import com.smarthome.ui.fragment.SwitchFragment;
+import com.smarthome.ui.listener.ClientMqttStatusListener;
+import com.smarthome.Constants;
+import com.smarthome.ui.listener.NetworkListener;
+import com.smarthome.R;
+import com.smarthome.ShadowApplication;
+import com.smarthome.network.model.SmartHomeControl;
+import com.smarthome.network.model.SmartHomeStatus;
+import com.smarthome.network.VerifyCertificateTask;
 
-import java.io.UnsupportedEncodingException;
 import java.security.KeyStore;
-import java.util.UUID;
 
+public class SecureMainActivity extends FragmentActivity implements NetworkListener, ClientMqttStatusListener {
 
-public class Main_Secure extends FragmentActivity implements NetworkListener, ClientMqttStatusListener {
+    private static final String LOG_TAG = SecureMainActivity.class.getSimpleName();
 
-    private static final String LOG_TAG = Main_Secure.class.getCanonicalName();
-    ImageView mAlaram;
-    TextView mAlaramTxt;
-    Button btn;
+    private ImageView mAlaram;
+    private TextView mAlaramTxt;
+    private Button btn;
 
+    final Context context = SecureMainActivity.this;
 
-    final Context context = Main_Secure.this;
+    private KeyStore clientKeyStore = null;
 
-    AWSIotClient mIotAndroidClient;
-    AWSIotMqttManager mqttManager;
-    String clientId;
-    String keystorePath;
-    String keystoreName;
-    String keystorePassword;
+    private String SelectedText;
 
-    KeyStore clientKeyStore = null;
-    String certificateId;
-
-    TextView mJsonTxt;
-
-
-    CognitoCachingCredentialsProvider credentialsProvider;
-
-    String result;
-    String SelectedText;
-    final String topic = "$aws/things/SmartHome/shadow/update";
+    private SubscribeToTopic subscribeToTopic;
+    private final String topic = "$aws/things/SmartHome/shadow/update";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main__secure);
-        SmartHomeStatus smartHomeStatus;
         //Cognito Pool Authentications
-        Authnticate.getInstance().createConnection(getApplicationContext());
+        Authenticate.getInstance().createConnection(getApplicationContext());
 
         View.OnClickListener listener = new View.OnClickListener() {
             public void onClick(View view) {
@@ -112,11 +90,7 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
                     clientKeyStore = AWSIotKeystoreHelper.getIotKeystore(Constants.CERTIFICATE_ID,
                             Constants.KEY_STORE_PATH, Constants.KEYSTORE_NAME, Constants.KEYSTORE_PASSWORD);
 
-                } else {
-                    Log.i(LOG_TAG, "Key/cert " + certificateId + " not found in keystore.");
                 }
-            } else {
-                Log.i(LOG_TAG, "Keystore " + keystorePath + "/" + keystoreName + " not found.");
             }
         } catch (Exception e) {
             Log.e(LOG_TAG, "An error occurred retrieving cert/key from keystore.", e);
@@ -126,48 +100,8 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
             Log.i(LOG_TAG, "Cert/key was not found in keystore - creating new key and certificate.");
             new VerifyCertificateTask(this).execute();
         } else {
-
-           ShadowApplication.getInstance().getIotManager().connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
-             @Override
-            public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
-
-                    String clientStatus = "";
-                    onStatusUpdate(clientStatus);
-                    Log.i("", "Client status : " + status.name());
-                    if (status == AWSIotMqttClientStatus.Connected) {
-                        clientStatus = Constants.CONNECTED;
-                        try {
-                            ShadowApplication.getInstance().getIotManager().subscribeToTopic(topic, AWSIotMqttQos.QOS0,
-                                    new AWSIotMqttNewMessageCallback() {
-                                        @Override
-                                        public void onMessageArrived(final String topic, final byte[] data) {
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    try {
-                                                        String message = new String(data, "UTF-8");
-                                                        Log.d(LOG_TAG, "Message arrived:");
-                                                        Log.d(LOG_TAG, "   Topic: " + topic);
-                                                        Log.d(LOG_TAG, " Message: " + message);
-
-                                                    } catch (UnsupportedEncodingException e) {
-                                                        Log.e(LOG_TAG, "Message encoding error.", e);
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    });
-                        } catch (Exception e) {
-                            Log.e(LOG_TAG, "Subscription error.", e);
-                        }
-                    } else {
-                        Log.d(LOG_TAG, "Not Subscribed as client not connected");
-                    }
-
-
-
-               }
-            });
+            ShadowApplication.getInstance().getIotManager().connect(clientKeyStore,
+                    new SecureAWSIotMqttClientManager(this));
         }
 
         mAlaram = (ImageView) findViewById(R.id.Alaram);
@@ -184,8 +118,8 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
                 dialog.setTitle(R.string.title);
 
                 final RadioGroup rg = (RadioGroup) dialog.findViewById(R.id.group);
-               final RadioButton rd1 = (RadioButton) dialog.findViewById(R.id.mode1);
-               final RadioButton rd2 = (RadioButton) dialog.findViewById(R.id.mode2);
+                final RadioButton rd1 = (RadioButton) dialog.findViewById(R.id.mode1);
+                final RadioButton rd2 = (RadioButton) dialog.findViewById(R.id.mode2);
 
                 //  System.out.println("alaram in text field" + mAlaramTxt.getText().toString());
                 if (mAlaramTxt.getText().toString().equalsIgnoreCase("arm away")) {
@@ -211,18 +145,17 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                         int id = rg.getCheckedRadioButtonId();
-                        if(rd1.isChecked()) {
-                            update.state.reported.Controls.setAlaram(rd1.getText().toString());
+                        if (rd1.isChecked()) {
+                            update.getState().getReported().getControls().setAlaram(rd1.getText().toString());
                             SelectedText = rd1.getText().toString();
                             Log.d(LOG_TAG, "button selected " + rd1.getText());
-                        }
-                        else if(rd2.isChecked()){
-                            update.state.reported.Controls.setAlaram(rd2.getText().toString());
+                        } else if (rd2.isChecked()) {
+                            update.getState().getReported().getControls().setAlaram(rd2.getText().toString());
                             SelectedText = rd2.getText().toString();
                             Log.d(LOG_TAG, "button selected " + rd2.getText());
 
                         }
-                           // updtae id.gettext to shadow.
+                        // updtae id.gettext to shadow.
                     }
                 });
                 Button ok = (Button) dialog.findViewById(R.id.ok);
@@ -231,7 +164,7 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
-                        mAlaramTxt.setText(SelectedText+" " +  "Setting "+"......");
+                        mAlaramTxt.setText(SelectedText + " " + "Setting " + "......");
                         Log.d(LOG_TAG, "Text changed on Ok " + rd2.getText());
                         String newState = String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"%s\"}}}}", SelectedText);
                         Log.i(LOG_TAG, "Subscribed result: " + newState);
@@ -254,10 +187,14 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
 
             }
         });
+    }
 
-
+    private void launchFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commitAllowingStateLoss();
 
     }
+
     public void getShadow(View view) {
         executeShadowTask();
     }
@@ -266,29 +203,26 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
         GetShadowTask getStatusShadowTask = new GetShadowTask("SmartHome", this);
         getStatusShadowTask.execute();
     }
-    public void executeUpdateShadowTask(String newState){
-        UpdateShadowTask updateShadowTask = new UpdateShadowTask(this);
-        updateShadowTask.setState(newState);
+
+    public void executeUpdateShadowTask(String newState) {
+        UpdateShadowTask updateShadowTask = new UpdateShadowTask(newState, this);
         updateShadowTask.execute();
-
-
     }
 
     @Override
     public void onSuccess(Object object) {
-        if (object instanceof SmartHomeControl)
-        {
+        if (object instanceof SmartHomeControl) {
             SmartHomeControl smartHomeControl = (SmartHomeControl) object;
-
+            //
         }
         if (object instanceof SmartHomeStatus) {
             SetObject(object);
             SmartHomeStatus smartHomeStatus = (SmartHomeStatus) object;
 
-            System.out.println(smartHomeStatus.state.reported.Controls.Alaram);
+            System.out.println(smartHomeStatus.getState().getReported().getControls().getAlaram());
 
             mAlaramTxt = (TextView) findViewById(R.id.AlaramTxt);
-            mAlaramTxt.setText(smartHomeStatus.state.reported.Controls.getAlaram());
+            mAlaramTxt.setText(smartHomeStatus.getState().getReported().getControls().getAlaram());
             // System.out.println(smartHomeStatus.state.reported.Doors.getFrontDoor());
 
             System.out.println("i am in onsuccess");
@@ -296,18 +230,15 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
     }
 
     Object mObject;
-    public  void SetObject(Object object)
-    {
+
+    public void SetObject(Object object) {
         mObject = object;
-
     }
 
-    public  Object GetObject()
-
-    {
+    public Object GetObject() {
         return mObject;
-
     }
+
     @Override
     public void onFailure() {
         System.out.println("i am in failure");
@@ -316,11 +247,15 @@ public class Main_Secure extends FragmentActivity implements NetworkListener, Cl
 
     @Override
     public void onStatusUpdate(String status) {
-
-        if (status == Constants.CONNECTED) {
-            //
-
+        if (status.equals(Constants.CONNECTED)) {
+            ShadowApplication.getInstance().getIotManager().subscribeToTopic(
+                    topic, AWSIotMqttQos.QOS0, subscribeToTopic);
         }
+    }
+
+    public void connectIotManager() {
+        ShadowApplication.getInstance().getIotManager().connect(clientKeyStore,
+                new SecureAWSIotMqttClientManager(this));
     }
 }
 

@@ -1,4 +1,4 @@
-package com.example.saisu.smarthome;
+package com.smarthome.ui.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import com.smarthome.R;
 
 /**
  * Created by Naveen on 12/3/16.

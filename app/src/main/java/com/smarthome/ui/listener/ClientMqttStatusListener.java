@@ -1,4 +1,4 @@
-package com.example.saisu.smarthome;
+package com.smarthome.ui.listener;
 
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttClientStatusCallback;
 

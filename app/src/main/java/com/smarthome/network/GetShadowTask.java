@@ -1,35 +1,37 @@
-package com.example.saisu.smarthome;
+package com.smarthome.network;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.amazonaws.services.iotdata.model.GetThingShadowRequest;
 import com.amazonaws.services.iotdata.model.GetThingShadowResult;
+import com.smarthome.data.Authenticate;
+import com.smarthome.ui.listener.NetworkListener;
+import com.smarthome.network.model.SmartHomeControl;
+import com.smarthome.network.model.SmartHomeStatus;
 import com.google.gson.Gson;
 
 /**
  * Created by saisu on 11/30/2016.
  */
 
-class GetShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
+public class GetShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
 
     private final String thingName;
     private NetworkListener mNetworkListener;
-    String LOG_TAG = GetShadowTask.class.getSimpleName();
+    private static final String LOG_TAG = GetShadowTask.class.getSimpleName();
 
     public GetShadowTask(String name, NetworkListener networkListener) {
         thingName = name;
         mNetworkListener = networkListener;
     }
 
-
-
     @Override
     protected AsyncTaskResult<String> doInBackground(Void... voids) {
         try {
             GetThingShadowRequest getThingShadowRequest = new GetThingShadowRequest()
                     .withThingName("SmartHome");
-            GetThingShadowResult result = Authnticate.getInstance().getIotDataClient().getThingShadow(getThingShadowRequest);
+            GetThingShadowResult result = Authenticate.getInstance().getIotDataClient().getThingShadow(getThingShadowRequest);
             byte[] bytes = new byte[result.getPayload().remaining()];
             result.getPayload().get(bytes);
             String resultString = new String(bytes);
@@ -73,8 +75,6 @@ class GetShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
         }
 
     }
-
-
 
     private void smarthomeStatusUpdated(String smarthomeStatusState) {
         Gson gson = new Gson();

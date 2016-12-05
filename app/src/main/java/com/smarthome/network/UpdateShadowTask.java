@@ -1,12 +1,13 @@
-package com.example.saisu.smarthome;
+package com.smarthome.network;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.amazonaws.services.iotdata.model.GetThingShadowRequest;
-import com.amazonaws.services.iotdata.model.GetThingShadowResult;
 import com.amazonaws.services.iotdata.model.UpdateThingShadowRequest;
 import com.amazonaws.services.iotdata.model.UpdateThingShadowResult;
+import com.smarthome.data.Authenticate;
+import com.smarthome.ui.listener.NetworkListener;
+import com.smarthome.network.model.SmartHomeControl;
 import com.google.gson.Gson;
 
 import java.nio.ByteBuffer;
@@ -14,7 +15,7 @@ import java.nio.ByteBuffer;
 /**
  * Created by saisu on 12/3/2016.
  */
-class UpdateShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
+public class UpdateShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
 
     private String thingName;
     private String updateState;
@@ -24,14 +25,9 @@ class UpdateShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
         thingName = name;
     }
 
-    public void setState(String state) {
-        updateState = state;
-    }
-
-
-    public UpdateShadowTask( NetworkListener networkListener) {
-
+    public UpdateShadowTask(String state, NetworkListener networkListener) {
         mNetworkListener = networkListener;
+        updateState = state;
     }
 
     @Override
@@ -43,7 +39,7 @@ class UpdateShadowTask extends AsyncTask<Void, Void, AsyncTaskResult<String>> {
             ByteBuffer payloadBuffer = ByteBuffer.wrap(updateState.getBytes());
             request.setPayload(payloadBuffer);
 
-            UpdateThingShadowResult result = Authnticate.getInstance().getIotDataClient().updateThingShadow(request);
+            UpdateThingShadowResult result = Authenticate.getInstance().getIotDataClient().updateThingShadow(request);
 
             byte[] bytes = new byte[result.getPayload().remaining()];
             result.getPayload().get(bytes);

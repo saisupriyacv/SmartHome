@@ -1,7 +1,6 @@
-package com.example.saisu.smarthome;
+package com.smarthome.data;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -11,7 +10,7 @@ import com.amazonaws.services.iotdata.AWSIotDataClient;
 /**
  * Created by saisu on 11/30/2016.
  */
-public class Authnticate {
+public class Authenticate {
 
     // Customer specific IoT endpoint
     // AWS Iot CLI describe-endpoint call returns: XXXXXXXXXX.iot.<region>.amazonaws.com
@@ -21,7 +20,7 @@ public class Authnticate {
     private static final String COGNITO_POOL_ID = "us-east-1:63486043-e999-4cc0-8d1c-c6b6423e1f3a";
     // Region of AWS IoT
     private static final Regions MY_REGION = Regions.US_EAST_1;
-    private static final String TAG = Authnticate.class.getSimpleName();
+    private static final String TAG = Authenticate.class.getSimpleName();
 
 
 
@@ -29,11 +28,11 @@ public class Authnticate {
 
     private AWSIotDataClient iotDataClient;
 
-    private static Authnticate ourInstance;
+    private static Authenticate ourInstance;
 
-    public static Authnticate getInstance() {
+    public static Authenticate getInstance() {
         if (ourInstance == null) {
-            ourInstance = new Authnticate();
+            ourInstance = new Authenticate();
         }
         return ourInstance;
     }

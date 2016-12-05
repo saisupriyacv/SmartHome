@@ -1,5 +1,7 @@
-package com.example.saisu.smarthome;
+package com.smarthome.network;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -11,6 +13,12 @@ import com.amazonaws.services.iot.AWSIotClient;
 import com.amazonaws.services.iot.model.AttachPrincipalPolicyRequest;
 import com.amazonaws.services.iot.model.CreateKeysAndCertificateRequest;
 import com.amazonaws.services.iot.model.CreateKeysAndCertificateResult;
+import com.smarthome.data.Authenticate;
+import com.smarthome.ui.SecureAWSIotMqttClientManager;
+import com.smarthome.ui.activity.SecureMainActivity;
+import com.smarthome.ui.listener.ClientMqttStatusListener;
+import com.smarthome.Constants;
+import com.smarthome.ShadowApplication;
 
 import java.security.KeyStore;
 
@@ -19,19 +27,20 @@ import java.security.KeyStore;
  */
 public class VerifyCertificateTask extends AsyncTask<Void, Void, KeyStore> {
 
-    public ClientMqttStatusListener statusListener;
-    String TAG = VerifyCertificateTask.class.getSimpleName();
+    private Activity mActivity;
 
-    public VerifyCertificateTask(ClientMqttStatusListener statusListener) {
+    private static final String TAG = VerifyCertificateTask.class.getSimpleName();
+
+    public VerifyCertificateTask(Activity activity) {
         AWSIotMqttLastWillAndTestament lwt = new AWSIotMqttLastWillAndTestament("my/lwt/topic",
                 "Android client lost connection", AWSIotMqttQos.QOS0);
         ShadowApplication.getInstance().getIotManager().setMqttLastWillAndTestament(lwt);
-        this.statusListener = statusListener;
+        mActivity = activity;
     }
 
     @Override
     protected KeyStore doInBackground(Void... params) {
-        AWSIotClient mIotAndroidClient = new AWSIotClient(Authnticate.getInstance().getCredentialProvider());
+        AWSIotClient mIotAndroidClient = new AWSIotClient(Authenticate.getInstance().getCredentialProvider());
             // Create a new private key and certificate. This call
             // creates both on the server and returns them to the
             // device.
@@ -76,43 +85,8 @@ public class VerifyCertificateTask extends AsyncTask<Void, Void, KeyStore> {
 
     @Override
     protected void onPostExecute(KeyStore keyStore) {
-
-        ShadowApplication.getInstance().getIotManager().connect(keyStore, new AWSIotMqttClientStatusCallback() {
-            @Override
-            public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
-                String clientStatus = "";
-                Log.i("", "Client status : " + status.name());
-                if(status == AWSIotMqttClientStatus.Connecting )
-                {
-                    clientStatus = Constants.CONNECTING;
-                    Log.d(TAG,"Constants.CONNECTING");
-                }
-                else if (status == AWSIotMqttClientStatus.Connected) {
-                    clientStatus = Constants.CONNECTED;
-                    Log.d(TAG,"Constants.CONNECTED" + "Successfully");
-                }
-                else if(status == AWSIotMqttClientStatus.Reconnecting)
-                {
-                    clientStatus = Constants.Reconnecting;
-                    Log.d(TAG,"Constants.RECONNECTING");
-                }
-                else if(status == AWSIotMqttClientStatus.ConnectionLost)
-                {
-                    clientStatus = Constants.ConnectionLost;
-                    Log.d(TAG,"Constants.ConnectionLost");
-                }
-
-
-                else {
-                    clientStatus = Constants.INVALID;
-                    Log.d(TAG,"Constants.INVALID" );
-                }
-
-
-                if (statusListener != null) {
-                    statusListener.onStatusUpdate(clientStatus);
-                }
-            }
-        });
+        if (mActivity instanceof SecureMainActivity) {
+            ((SecureMainActivity) mActivity).connectIotManager();
+        }
     }
 }

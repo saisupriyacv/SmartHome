@@ -1,4 +1,4 @@
-package com.example.saisu.smarthome;
+package com.smarthome;
 
 /**
  * Created by saisu on 12/3/2016.

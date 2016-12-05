@@ -16,7 +16,7 @@ import com.smarthome.ui.activity.SecureMainActivity;
  * Created by Naveen on 12/3/16.
  */
 
-public class DoorFragment extends android.support.v4.app.Fragment {
+public class DoorFragment extends BaseFragment {
     TextView text1,text2,text3;
     Object obj;
 
@@ -34,12 +34,21 @@ public class DoorFragment extends android.support.v4.app.Fragment {
             SecureMainActivity myactivity = (SecureMainActivity) activity;
             obj = myactivity.GetObject();
         }
-
-
-        SmartHomeStatus smartHomeStatus = (SmartHomeStatus) obj;
         text1.setText(((SmartHomeStatus) obj).getState().getReported().getDoors().getFrontDoor());
         text2.setText(((SmartHomeStatus) obj).getState().getReported().getDoors().getBackDoor());
         text2.setText(((SmartHomeStatus) obj).getState().getReported().getDoors().getSideDoor());
+
         return view;
+    }
+
+    @Override
+    public void updateFragment(Object object) {
+
+        if (object instanceof SmartHomeStatus) {
+            SmartHomeStatus smartHomeStatus = (SmartHomeStatus) object;
+            text1.setText(smartHomeStatus.getState().getReported().getDoors().getFrontDoor());
+            text2.setText(smartHomeStatus.getState().getReported().getDoors().getBackDoor());
+            text2.setText(smartHomeStatus.getState().getReported().getDoors().getSideDoor());
+        }
     }
 }

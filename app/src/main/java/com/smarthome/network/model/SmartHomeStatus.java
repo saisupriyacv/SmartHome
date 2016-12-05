@@ -64,6 +64,14 @@ public class SmartHomeStatus {
                 Controls = controls;
             }
 
+            public Reported.Temperature getTemperature() {
+                return Temperature;
+            }
+
+            public void setTemperature(Reported.Temperature temperature) {
+                Temperature = temperature;
+            }
+
             private Doors Doors;
 
             private Controls Controls;

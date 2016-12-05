@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -22,8 +23,10 @@ import com.smarthome.network.GetShadowTask;
 import com.smarthome.network.UpdateShadowTask;
 import com.smarthome.ui.SecureAWSIotMqttClientManager;
 import com.smarthome.data.Authenticate;
+import com.smarthome.ui.fragment.BaseFragment;
 import com.smarthome.ui.fragment.DoorFragment;
 import com.smarthome.ui.fragment.SwitchFragment;
+import com.smarthome.ui.fragment.TemperatureFragment;
 import com.smarthome.ui.listener.ClientMqttStatusListener;
 import com.smarthome.Constants;
 import com.smarthome.ui.listener.NetworkListener;
@@ -53,31 +56,42 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
     private final String topic = "$aws/things/SmartHome/shadow/update";
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main__secure);
         //Cognito Pool Authentications
         Authenticate.getInstance().createConnection(getApplicationContext());
 
+
+
         View.OnClickListener listener = new View.OnClickListener() {
             public void onClick(View view) {
                 Fragment fragment = null;
-                if(view == findViewById(R.id.button1)){
+                if(view.getId() == R.id.button1){
                     fragment = new DoorFragment();
-                } else {
+                } else if(view.getId() == R.id.button2) {
                     fragment = new SwitchFragment();
                 }
+                else if(view.getId() == R.id.tempbtn){
+                    fragment =new TemperatureFragment();
+                }
                 FragmentManager manager = getSupportFragmentManager();
-                android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
+                FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.frame_container, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
         };
+
         Button btn1 = (Button)findViewById(R.id.button1);
         btn1.setOnClickListener(listener);
         Button btn2 = (Button)findViewById(R.id.button2);
         btn2.setOnClickListener(listener);
+        Button btn3 = (Button)findViewById(R.id.tempbtn);
+        btn3.setOnClickListener(listener);
+
+
 
         // To load cert/key from keystore on filesystem
         try {
@@ -100,8 +114,7 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
             Log.i(LOG_TAG, "Cert/key was not found in keystore - creating new key and certificate.");
             new VerifyCertificateTask(this).execute();
         } else {
-            ShadowApplication.getInstance().getIotManager().connect(clientKeyStore,
-                    new SecureAWSIotMqttClientManager(this));
+            connectIotManager();
         }
 
         mAlaram = (ImageView) findViewById(R.id.Alaram);
@@ -167,8 +180,9 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
                         mAlaramTxt.setText(SelectedText + " " + "Setting " + "......");
                         Log.d(LOG_TAG, "Text changed on Ok " + rd2.getText());
                         String newState = String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"%s\"}}}}", SelectedText);
-                        Log.i(LOG_TAG, "Subscribed result: " + newState);
+                        Log.i(LOG_TAG, "Sending data to shadow: " + newState);
                         executeUpdateShadowTask(newState);
+
 
                     /*    ProgressDialog dialog1 = ProgressDialog.show(
                                 context,
@@ -217,12 +231,17 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
         }
         if (object instanceof SmartHomeStatus) {
             SetObject(object);
-            SmartHomeStatus smartHomeStatus = (SmartHomeStatus) object;
+            final SmartHomeStatus smartHomeStatus = (SmartHomeStatus) object;
 
             System.out.println(smartHomeStatus.getState().getReported().getControls().getAlaram());
 
             mAlaramTxt = (TextView) findViewById(R.id.AlaramTxt);
             mAlaramTxt.setText(smartHomeStatus.getState().getReported().getControls().getAlaram());
+
+            BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.frame_container);
+            if (fragment != null && fragment.isVisible()) {
+                fragment.updateFragment(object);
+            }
             // System.out.println(smartHomeStatus.state.reported.Doors.getFrontDoor());
 
             System.out.println("i am in onsuccess");
@@ -248,8 +267,10 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
     @Override
     public void onStatusUpdate(String status) {
         if (status.equals(Constants.CONNECTED)) {
+            subscribeToTopic = new SubscribeToTopic(this, this);
             ShadowApplication.getInstance().getIotManager().subscribeToTopic(
                     topic, AWSIotMqttQos.QOS0, subscribeToTopic);
+            Log.d(LOG_TAG, "Subscribed to Topic");
         }
     }
 

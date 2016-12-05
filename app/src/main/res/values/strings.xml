@@ -4,4 +4,17 @@
     <string name="title">Security</string>
     <string name="btn_label1"> Door Status </string>
     <string name="btn_label2"> Switch Control </string>
+    <string name="user_name">User name</string>
+    <string name="password">Password</string>
+    <string name="Checkbox">Save detail For Nexttime</string>
+    <string name="buttonLogin">Login</string>
+    <string name="request_accessButton">Request Access</string>
+    <string name="user_name_hint">User name</string>
+    <string name="user_name_rule">User name must have at least 4 caharacter</string>
+    <string name="password_hint">Password</string>
+    <string name="PasswordRule">Password must have at least 8 caharacter</string>
+    <string name="ConfirmPasswordHint">ConfirmPassword</string>
+    <string name="emailhint">Email</string>
+    <string name="send_requestButton">Send Request</string>
+    <string name="cancelButton">Cancel</string>
 </resources>

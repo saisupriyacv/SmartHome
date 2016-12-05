@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_request_access"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.smarthome.ui.activity.RequestAccess">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/user_name_hint"
+        android:ems="10"
+        android:id="@+id/UserID" />
+
+    <TextView
+        android:text="@string/user_name_rule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/RuleUserID" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/password_hint"
+        android:inputType="text"
+        android:ems="10"
+        android:id="@+id/PassID" />
+
+    <TextView
+        android:text="@string/PasswordRule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/RulePasswordID" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/ConfirmPasswordHint"
+        android:ems="10"
+        android:id="@+id/ConfirmPassID" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/emailhint"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/EmailID" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <Button
+        android:text="@string/send_requestButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/SendID"
+        android:layout_weight="1.03" />
+
+    <Button
+        android:text="@string/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/CancelID"
+        android:layout_weight="1" />
+    </LinearLayout>
+
+
+</LinearLayout>

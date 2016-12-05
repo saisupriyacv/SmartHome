@@ -1,6 +1,7 @@
 package com.smarthome.ui.activity;
 
 import android.app.Dialog;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
@@ -276,7 +277,7 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
 
     public void connectIotManager() {
         ShadowApplication.getInstance().getIotManager().connect(clientKeyStore,
-                new SecureAWSIotMqttClientManager(this));
+                new SecureAWSIotMqttClientManager(SecureMainActivity.this));
     }
 }
 

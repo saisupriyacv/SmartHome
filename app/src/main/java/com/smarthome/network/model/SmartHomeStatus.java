@@ -14,8 +14,11 @@ package com.smarthome.network.model;
                   "Switch":  \"%s\",
                   "Alaram":  \"%s\"
 
-                }
-            }
+                },
+
+
+
+                            }
          }
     }
 */
@@ -112,14 +115,14 @@ public class SmartHomeStatus {
 
             public class Temperature {
 
-                private String Temperature;
+                private String LivingRoom;
 
                 public String getTemperature() {
-                    return Temperature;
+                    return LivingRoom;
                 }
 
                 public void setTemperature(String temperature) {
-                    Temperature = temperature;
+                    LivingRoom = temperature;
                 }
             }
 

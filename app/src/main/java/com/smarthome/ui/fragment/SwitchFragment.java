@@ -1,5 +1,6 @@
 package com.smarthome.ui.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,9 +32,18 @@ public class SwitchFragment extends BaseFragment {
         toggleButton = (ToggleButton) view.findViewById(R.id.toggle);
         stateOnOff=(TextView) view.findViewById(R.id.tvstate);
 
+        //Please add this in your Fragment in order to access doors
+        Activity activity = getActivity();
+        if(activity instanceof SecureMainActivity){
+            SecureMainActivity myactivity = (SecureMainActivity) activity;
+            obj = myactivity.GetObject();
+        }
+
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+
                 if(isChecked){
 
                     String newState = String.format("{\"state\":{\"desired\":{\"Controls\":{\"Switch\":\"%s\"}}}}", "on");

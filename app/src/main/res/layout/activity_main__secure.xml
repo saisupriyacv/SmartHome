@@ -1,65 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
- <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   >
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_stay_current_landscape_black_24dp"
-        android:id="@+id/Alaram"
-        android:layout_centerHorizontal="true"
-        tools:ignore="ContentDescription" />
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <TextView
+     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+         xmlns:tools="http://schemas.android.com/tools"
+         android:id="@+id/car_layout"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:background="#66ccff"
+         tools:context=".PropertyAnimatedActivity" >
+
+
+
+         <ImageView
+             android:id="@+id/cloud6"
+             android:layout_width="150dp"
+             android:layout_height="150dp"
+             android:layout_marginTop="20dp"
+             android:layout_marginRight="150dp"
+             android:contentDescription="@string/cloud"
+             android:paddingLeft="50dp"
+             android:paddingTop="30dp"
+             android:src="@drawable/tempicon2" />
+
+         <ImageView
+             android:id="@+id/cloud0"
+             android:layout_width="150dp"
+             android:layout_height="150dp"
+             android:layout_marginTop="20dp"
+             android:layout_marginLeft="50dp"
+             android:contentDescription="@string/cloud"
+             android:paddingLeft="50dp"
+             android:paddingTop="30dp"
+             android:src="@drawable/light" />
+
+         <ImageView
+             android:id="@+id/cloud1"
+             android:layout_width="150dp"
+             android:layout_height="150dp"
+             android:layout_marginTop="70dp"
+             android:layout_marginLeft="170dp"
+             android:contentDescription="@string/cloud"
+             android:paddingLeft="80dp"
+             android:paddingTop="50dp"
+             android:src="@drawable/extra_1" />
+
+         <ImageView
+             android:id="@+id/cloud2"
+             android:layout_width="150dp"
+             android:layout_height="150dp"
+             android:layout_marginLeft="170dp"
+             android:layout_marginTop="70dp"
+             android:contentDescription="@string/cloud"
+             android:paddingLeft="50dp"
+             android:paddingTop="40dp"
+             android:src="@drawable/extra_3" />
+
+         <ImageView
+             android:id="@+id/cloud3"
+             android:layout_width="200dp"
+             android:layout_height="200dp"
+             android:layout_marginTop="20dp"
+             android:layout_marginLeft="100dp"
+             android:contentDescription="@string/cloud"
+             android:paddingLeft="80dp"
+             android:paddingTop="50dp"
+             android:src="@drawable/settings" />
+
+         <ImageView
+             android:id="@+id/cloud4"
+             android:layout_width="200dp"
+             android:layout_height="200dp"
+             android:layout_marginTop="50dp"
+             android:layout_marginLeft="100dp"
+             android:contentDescription="@string/cloud"
+             android:paddingLeft="80dp"
+             android:paddingTop="50dp"
+             android:src="@drawable/bright" />
+
+         <ImageView
+             android:id="@+id/window"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent"
+             android:contentDescription="@string/window"
+             android:src="@drawable/window" />
+
+
+
+
+
+         <ImageView
+                 android:layout_width="150dp"
+                 android:layout_height="150dp"
+                 android:src="@drawable/home_icon_2"
+                 android:layout_marginTop="200dp"
+                 android:id="@+id/Alaram"
+                 android:layout_centerHorizontal="true"
+                 tools:ignore="ContentDescription" />
+
+         <TextView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_below="@+id/Alaram"
+                 android:layout_centerHorizontal="true"
+                 android:id="@+id/AlaramTxt"
+                 tools:ignore="HardcodedText" />
+
+         <FrameLayout
+                 android:id="@+id/frame_container"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_below="@+id/AlaramTxt"
+                 android:layout_marginTop="100dp"
+                 android:padding="2dp" />
+
+         <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentBottom="true"
+                 android:orientation="horizontal">
+             <Button
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     android:layout_weight="1"
+                     android:id="@+id/button1"
+                     android:text="@string/btn_label1"
+                     android:background="@color/orange"
+                     />
+
+             <Button
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     android:layout_weight="1"
+                     android:id="@+id/button2"
+                     android:background="@color/orange"
+                     android:text="@string/btn_label2"
+                     />
+             <Button
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     android:layout_weight="1"
+                     android:id="@+id/tempbtn"
+                     android:background="@color/orange"
+                     android:text="Temperature"
+                     />
+
+             </LinearLayout>
+         </RelativeLayout>
+
+
+    <include
+        layout="@layout/app_bar_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Alaram"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/AlaramTxt"
-
-        tools:ignore="HardcodedText" />
-
-    <FrameLayout
-        android:id="@+id/frame_container"
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/AlaramTxt"
-        android:padding="2dp" />
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer" />
 
+</android.support.v4.widget.DrawerLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/btn_label1"
-            android:id="@+id/button1"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/btn_label2"
-            android:id="@+id/button2"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/tempbtn"
-            android:text="Temperature"/>
-
-
-    </LinearLayout>
-
-
-</RelativeLayout>
 
 
 

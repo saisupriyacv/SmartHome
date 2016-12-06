@@ -9,7 +9,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#CD96CD"
+        android:background="#aa000000"
+        android:textColor="@color/darkorange"
+        android:textSize="20dp"
         android:gravity="center"
         android:text="Switch Control"
         android:id="@+id/tvstate"
@@ -18,7 +20,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#000000" />
+        android:background="#aa000000"
+         />
 
 
     <ToggleButton
@@ -26,7 +29,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="#CD96CD"
+        android:background="#aa000000"
+        android:textColor="@color/darkorange"
+        android:textSize="20dp"
         android:text="Switch"
         android:textOn="ON"
         android:textOff="OFF"

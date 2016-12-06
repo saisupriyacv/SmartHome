@@ -4,6 +4,14 @@
     <string name="title">Security</string>
     <string name="btn_label1"> Door Status </string>
     <string name="btn_label2"> Switch Control </string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="wheel">Steering Wheel</string>
+    <string name="ground">The Ground</string>
+    <string name="window">Window Frame</string>
+    <string name="sun">The Sun</string>
+    <string name="cloud">A Cloud</string>
+
     <string name="user_name">User name</string>
     <string name="password">Password</string>
     <string name="Checkbox">Save detail For Nexttime</string>

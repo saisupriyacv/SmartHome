@@ -1,5 +1,17 @@
 package com.smarthome.ui.activity;
 
+
+
+
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.graphics.Color;
+import android.view.Menu;
+import android.widget.ImageView;
+
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -8,14 +20,20 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.provider.Settings;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -32,6 +50,8 @@ import com.smarthome.ui.SecureAWSIotMqttClientManager;
 import com.smarthome.data.Authenticate;
 import com.smarthome.ui.fragment.BaseFragment;
 import com.smarthome.ui.fragment.DoorFragment;
+import com.smarthome.ui.fragment.HistoryFragment;
+import com.smarthome.ui.fragment.ProfileFragment;
 import com.smarthome.ui.fragment.SwitchFragment;
 import com.smarthome.ui.fragment.TemperatureFragment;
 import com.smarthome.ui.listener.ClientMqttStatusListener;
@@ -44,9 +64,21 @@ import com.smarthome.network.model.SmartHomeStatus;
 import com.smarthome.network.VerifyCertificateTask;
 
 import java.security.KeyStore;
-import java.util.Timer;
 
-public class SecureMainActivity extends FragmentActivity implements NetworkListener, ClientMqttStatusListener {
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
+public class SecureMainActivity extends ActionBarActivity implements NetworkListener, ClientMqttStatusListener ,NavigationView.OnNavigationItemSelectedListener{
 
     private static final String LOG_TAG = SecureMainActivity.class.getSimpleName();
 
@@ -72,6 +104,74 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main__secure);
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+
+        ValueAnimator skyAnim = ObjectAnimator.ofInt
+                (findViewById(R.id.car_layout), "backgroundColor",
+                        Color.rgb(0x66, 0xcc, 0xff), Color.rgb(0x00, 0x66, 0x99));
+        skyAnim.setDuration(3000);
+        skyAnim.setRepeatCount(ValueAnimator.INFINITE);
+        skyAnim.setRepeatMode(ValueAnimator.REVERSE);
+        skyAnim.setEvaluator(new ArgbEvaluator());
+        skyAnim.start();
+
+        ObjectAnimator cloudAnim6 = ObjectAnimator.ofFloat(findViewById(R.id.cloud6), "x", -300);
+        cloudAnim6.setDuration(7000);
+        cloudAnim6.setRepeatCount(ValueAnimator.INFINITE);
+        cloudAnim6.setRepeatMode(ValueAnimator.REVERSE);
+        cloudAnim6.start();
+
+        ObjectAnimator cloudAnim0 = ObjectAnimator.ofFloat(findViewById(R.id.cloud0), "x", -300);
+        cloudAnim0.setDuration(2000);
+        cloudAnim0.setRepeatCount(ValueAnimator.INFINITE);
+        cloudAnim0.setRepeatMode(ValueAnimator.REVERSE);
+        cloudAnim0.start();
+        ObjectAnimator cloudAnim = ObjectAnimator.ofFloat(findViewById(R.id.cloud1), "x", -270);
+        cloudAnim.setDuration(4000);
+        cloudAnim.setRepeatCount(ValueAnimator.INFINITE);
+        cloudAnim.setRepeatMode(ValueAnimator.REVERSE);
+        cloudAnim.start();
+        ObjectAnimator cloudAnim2 = ObjectAnimator.ofFloat(findViewById(R.id.cloud2), "x", -250);
+        cloudAnim2.setDuration(6000);
+        cloudAnim2.setRepeatCount(ValueAnimator.INFINITE);
+        cloudAnim2.setRepeatMode(ValueAnimator.REVERSE);
+        cloudAnim2.start();
+        ObjectAnimator cloudAnim3 = ObjectAnimator.ofFloat(findViewById(R.id.cloud3), "x", -220);
+        cloudAnim3.setDuration(3000);
+        cloudAnim3.setRepeatCount(ValueAnimator.INFINITE);
+        cloudAnim3.setRepeatMode(ValueAnimator.REVERSE);
+        cloudAnim3.start();
+        ObjectAnimator cloudAnim4 = ObjectAnimator.ofFloat(findViewById(R.id.cloud4), "x", -220);
+        cloudAnim4.setDuration(5000);
+        cloudAnim4.setRepeatCount(ValueAnimator.INFINITE);
+        cloudAnim4.setRepeatMode(ValueAnimator.REVERSE);
+        cloudAnim4.start();
+
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FragmentManager manager=this.getSupportFragmentManager();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
         //Cognito Pool Authentications
         Authenticate.getInstance().createConnection(getApplicationContext());
 
@@ -191,7 +291,7 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
                         dialog.dismiss();
                         mAlaramTxt.setText(SelectedText + " " + "Setting " + "......");
                         Log.d(LOG_TAG, "Text changed on Ok " + rd2.getText());
-                        String newState = String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"%s\",\"Switch\":\"nop\"}}}}", SelectedText);
+                        String newState = String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"%s\"}}}}", SelectedText);
                         Log.i(LOG_TAG, "Sending data to shadow: " + newState);
                         executeUpdateShadowTask(newState);
 
@@ -328,6 +428,73 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
     }
 
 
+
+
+
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+
+        //creating fragment object
+        Fragment fragment = null;
+
+        int id = item.getItemId();
+
+        if (id == R.id.profile) {
+               fragment = new ProfileFragment();
+
+        } else if (id == R.id.history) {
+               fragment = new HistoryFragment();
+
+        }
+        //replacing the fragment
+        if (fragment != null) {
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.frame_container, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
 }
 

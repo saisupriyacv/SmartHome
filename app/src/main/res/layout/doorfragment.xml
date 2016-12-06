@@ -4,120 +4,92 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:id="@+id/doortxt"
-            android:text="Front Door"
-            android:layout_weight="1"
-            android:textSize="36sp"
-            android:paddingTop="30dp"
-            android:paddingRight="10dp"/>
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:id="@+id/doorimage"
-            android:src="@drawable/frontgateclosed"
-            android:layout_weight="1"/>
-
-
-
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#000000" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:layout_marginBottom="4dp">>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:background="#CD96CD"
+            android:textColor="@color/darkorange"
+            android:textSize="25dp"
             android:text="Front Door"
-            android:id="@+id/FrontDoor1" />
+             />
 
         <View
             android:layout_width="1dp"
             android:layout_height="fill_parent"
-            android:background="#000000" />
+             />
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:android_paddingLeft="30dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:src="@drawable/doorclose"
+            android:id="@+id/FrontDoor1"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:background="#CD96CD"
-            android:text="FrontDoor Status"
-            android:id="@+id/FrontDoor"/>
+            android:id="@+id/FrontDoor"
+            />
+
+
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:layout_marginBottom="1dp">>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:background="#CD96CD"
+            android:textColor="@color/darkorange"
+            android:textSize="25dp"
             android:text="Back Door" />
 
         <View
             android:layout_width="1dp"
             android:layout_height="fill_parent"
-            android:background="#000000" />
+         />
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginLeft="10dp"
+            android:android_paddingLeft="30dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:src="@drawable/dooropen"
+            android:id="@+id/BackDoor1"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:background="#CD96CD"
-            android:text="BackDoor Status"
-            android:id="@+id/BackDoor"/>
+            android:id="@+id/BackDoor"
+            />
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:background="#CD96CD"
-            android:text="Side Door" />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="#000000" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:background="#CD96CD"
-            android:text="Side Door Status"
-            android:id="@+id/SideDoor"/>
-    </LinearLayout>
 
 </LinearLayout>

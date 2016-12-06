@@ -36,7 +36,7 @@ public class DoorFragment extends BaseFragment {
             SecureMainActivity myactivity = (SecureMainActivity) activity;
             obj = myactivity.GetObject();
         }
-       text1.setText(((SmartHomeStatus) obj).getState().getReported().getDoors().getFrontDoor());
+        text1.setText(((SmartHomeStatus) obj).getState().getReported().getDoors().getFrontDoor());
         text2.setText(((SmartHomeStatus) obj).getState().getReported().getDoors().getBackDoor());
         text2.setText(((SmartHomeStatus) obj).getState().getReported().getDoors().getSideDoor());
 
@@ -48,7 +48,7 @@ public class DoorFragment extends BaseFragment {
 
         if (object instanceof SmartHomeStatus) {
             SmartHomeStatus smartHomeStatus = (SmartHomeStatus) object;
-           // text1.setText(smartHomeStatus.getState().getReported().getDoors().getFrontDoor());
+            text1.setText(smartHomeStatus.getState().getReported().getDoors().getFrontDoor());
             text2.setText(smartHomeStatus.getState().getReported().getDoors().getBackDoor());
             text2.setText(smartHomeStatus.getState().getReported().getDoors().getSideDoor());
         }

@@ -6,9 +6,7 @@ import com.amazonaws.mobileconnectors.iot.AWSIotMqttClientStatusCallback;
 import com.smarthome.Constants;
 import com.smarthome.ui.listener.ClientMqttStatusListener;
 
-/**
- * Created by sukesh.venkata on 12/4/16.
- */
+
 
 public class SecureAWSIotMqttClientManager implements AWSIotMqttClientStatusCallback {
 

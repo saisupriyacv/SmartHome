@@ -5,6 +5,8 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,6 +44,7 @@ import com.smarthome.network.model.SmartHomeStatus;
 import com.smarthome.network.VerifyCertificateTask;
 
 import java.security.KeyStore;
+import java.util.Timer;
 
 public class SecureMainActivity extends FragmentActivity implements NetworkListener, ClientMqttStatusListener {
 
@@ -287,24 +290,39 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
         ShadowApplication.getInstance().getIotManager().connect(clientKeyStore,
                 new SecureAWSIotMqttClientManager(this));
     }
+    final static String GROUP_KEY_GUEST = "group_key_guest";
 
 
     public void Notify(String notificationTitle, String notificationMessage){
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
 
-        Intent intent = new Intent(this, NotificationReceiverActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+        Intent intent = new Intent(this, SecureMainActivity.class);
+       PendingIntent pIntent =
+               PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
 
         Notification noti = new Notification.Builder(this)
                                .setContentTitle("Smart Home Alert message " )
-                                .setContentText("Door Open").setSmallIcon(R.drawable.alarm)
-                                .setContentIntent(pIntent)
-                                .addAction(R.drawable.alarm, "View", pIntent).build();
-                        // Notification bui ld
+                                .setContentText("Door Open")
+                                .setSmallIcon(R.drawable.alarm)
+                               //.setContentIntent(pIntent)
+                                .setFullScreenIntent(pIntent, false)
+                               .setOnlyAlertOnce(true)
+                                .setVisibility(1)
+                                .setSound(alarmSound)
+                                .setGroup(GROUP_KEY_GUEST)
+                                .setAutoCancel(true)
+
+
+                                .build();
+
+
+                // Notification bui  ld
 
                        // NotificationManager notificationManager = (NotificationManager) mActivity.getSystemService(NOTIFICATION_SERVICE);
                         noti.flags |= Notification.FLAG_AUTO_CANCEL;
-                        manager.notify(0, noti);
+
+                        manager.notify((int) System.currentTimeMillis(), noti);
                          Log.d(LOG_TAG, "Notifying Message");
 
     }

@@ -58,7 +58,6 @@ public class SubscribeToTopic implements AWSIotMqttNewMessageCallback  {
                     ((SecureMainActivity)mActivity).executeShadowTask();
                     if(ShadowApplication.getInstance().isMisActivitypassed()){
 
-
                        ((SecureMainActivity) mActivity).Notify("hi","hello");
                     }
                 } catch (UnsupportedEncodingException e) {

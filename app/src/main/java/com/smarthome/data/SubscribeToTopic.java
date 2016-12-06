@@ -48,6 +48,8 @@ public class SubscribeToTopic implements AWSIotMqttNewMessageCallback  {
         final String mTopic = topic;
         final byte[] mData = data;
        final Object obj = (((SecureMainActivity)mActivity).GetObject());
+       final SmartHomeStatus Status = (SmartHomeStatus) obj;
+
 
        mActivity.runOnUiThread(new Runnable() {
            @Override
@@ -77,7 +79,10 @@ public class SubscribeToTopic implements AWSIotMqttNewMessageCallback  {
 
                     if(ShadowApplication.getInstance().isMisActivitypassed()){
 
-                       ((SecureMainActivity) mActivity).Notify("hi","hello");
+                        if(!(Status.getState().getReported().getControls().getAlaram().equalsIgnoreCase("disarm"))) {
+
+                            ((SecureMainActivity) mActivity).Notify(Result, "hello");
+                        }
                     }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -85,7 +90,9 @@ public class SubscribeToTopic implements AWSIotMqttNewMessageCallback  {
             }
         });
     }
+    String Result;
     public void CompareObjects(SmartHomeStatus desired, SmartHomeStatus reported){
+        Result = "";
         if(desired.equals(reported)){
             Log.d(TAG,"Both equal");
         }
@@ -93,28 +100,35 @@ public class SubscribeToTopic implements AWSIotMqttNewMessageCallback  {
         {
             if(!(desired.getState().getReported().getDoors().getFrontDoor().equals( reported.getState().getReported().getDoors().getFrontDoor() ))){
                 Log.d(TAG,"front Door not equal");
+                Result  += "Front Door " + desired.getState().getReported().getDoors().getFrontDoor();
                 reported.getState().getReported().getDoors().setFrontDoor(desired.getState().getReported().getDoors().getFrontDoor());
             }
             if(!(desired.getState().getReported().getDoors().getBackDoor().equals( reported.getState().getReported().getDoors().getBackDoor() ))){
                 Log.d(TAG,"Back Door not equal");
+                Result += "Back Door " + desired.getState().getReported().getDoors().getBackDoor();
                 reported.getState().getReported().getDoors().setBackDoor(desired.getState().getReported().getDoors().getBackDoor());
             }
 
             if(!(desired.getState().getReported().getControls().getAlaram().equals( reported.getState().getReported().getControls().getAlaram() ))){
                 Log.d(TAG,"Alaram  not equal");
+                Result += "Alaram is now " + desired.getState().getReported().getControls().getAlaram();
                 reported.getState().getReported().getControls().setAlaram(desired.getState().getReported().getControls().getAlaram());
 
             }
 
             if(!(desired.getState().getReported().getControls().getSwitch().equals( reported.getState().getReported().getControls().getSwitch() ))){
                 Log.d(TAG,"Switch  not equal");
+                Result += "Switch is Switched " + desired.getState().getReported().getControls().getSwitch();
                 reported.getState().getReported().getControls().setSwitch(desired.getState().getReported().getControls().getSwitch());
             }
             if(!(desired.getState().getReported().getTemperature().getTemperature().equals( reported.getState().getReported().getTemperature().getTemperature() ))) {
                 Log.d(TAG, "Temperature  not equal");
+                Result += "Temperature is changed to " + desired.getState().getReported().getTemperature().getTemperature();
                 reported.getState().getReported().getTemperature().setTemperature(desired.getState().getReported().getTemperature().getTemperature());
 
             }
+
+            Log.d(TAG,Result);
 
 
         }

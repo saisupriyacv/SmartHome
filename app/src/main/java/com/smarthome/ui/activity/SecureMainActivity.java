@@ -303,7 +303,7 @@ public class SecureMainActivity extends FragmentActivity implements NetworkListe
 
         Notification noti = new Notification.Builder(this)
                                .setContentTitle("Smart Home Alert message " )
-                                .setContentText("Door Open")
+                                .setContentText(notificationTitle)
                                 .setSmallIcon(R.drawable.alarm)
                                //.setContentIntent(pIntent)
                                 .setFullScreenIntent(pIntent, false)

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_container1"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:shrinkColumns="*"
+            android:stretchColumns="*" >
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="5sp"
+                    android:paddingTop="5sp"
+                    android:text="Alaram Status"
+                    android:background="#aa000000"
+                    android:textColor="#ff0c35"
+                    android:textSize="20dp"
+                     />
+
+                <TextView
+                    android:id="@+id/tv6"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="5sp"
+                    android:paddingTop="5sp"
+                    android:text="Alaram Status"
+                    android:background="#aa000000"
+                    android:textColor="#ff0c35"
+                    android:textSize="20dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="50dip"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="5sp"
+                    android:paddingTop="5sp"
+                    android:text="Front Door Status"
+                    android:background="#aa000000"
+                    android:textColor="#ff0c35"
+                    android:textSize="20dp"
+                  />
+
+                <TextView
+                    android:id="@+id/tv1"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="5sp"
+                    android:paddingTop="5sp"
+                    android:background="#aa000000"
+                    android:textColor="#ff0c35"
+                    android:textSize="20dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="5sp"
+                    android:paddingTop="5sp"
+                    android:text="Back Door Status"
+                    android:background="#aa000000"
+                    android:textColor="#ff0c35"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/tv2"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="5sp"
+                    android:paddingTop="5sp"
+                    android:background="#aa000000"
+                    android:textColor="#ff0c35"
+                    android:textSize="20dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="5sp"
+                    android:paddingTop="5sp"
+                    android:text="Side Door Status"
+                    android:background="#aa000000"
+                    android:textColor="#ff0c35"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/tv3"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="5sp"
+                    android:paddingTop="5sp"
+                    android:background="#aa000000"
+                    android:textColor="#ff0c35"
+                    android:textSize="20dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="5sp"
+                    android:paddingTop="5sp"
+                    android:text="Switch Status"
+                    android:background="#aa000000"
+                    android:textColor="#ff0c35"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/tv4"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="5sp"
+                    android:paddingTop="5sp"
+                    android:background="#aa000000"
+                    android:textColor="#ff0c35"
+                    android:textSize="20dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="5sp"
+                    android:paddingTop="5sp"
+                    android:text="Temperature"
+                    android:background="#aa000000"
+                    android:textColor="#ff0c35"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/tv5"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="5sp"
+                    android:paddingTop="5sp"
+                    android:background="#aa000000"
+                    android:textColor="#ff0c35"
+                    android:textSize="20dp" />
+            </TableRow>
+
+
+
+
+
+        </TableLayout>
+    </ScrollView>
+
+</FrameLayout>

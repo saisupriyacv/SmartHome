@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -21,16 +23,18 @@ import com.smarthome.ui.activity.SecureMainActivity;
 public class SwitchFragment extends BaseFragment {
 
 
-    public ToggleButton toggleButton;
-    public TextView stateOnOff;
+    ImageView imgview;
+    Switch sButton;
     Object obj;
 
-    @Override
+   @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.switch_fragment, container, false);
-        toggleButton = (ToggleButton) view.findViewById(R.id.toggle);
-        stateOnOff=(TextView) view.findViewById(R.id.tvstate);
+
+       sButton = (Switch) view.findViewById(R.id.switchbtn);
+       imgview =(ImageView) view.findViewById(R.id.bulbimg);
+
 
         //Please add this in your Fragment in order to access doors
         Activity activity = getActivity();
@@ -39,7 +43,7 @@ public class SwitchFragment extends BaseFragment {
             obj = myactivity.GetObject();
         }
 
-        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        sButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
@@ -47,16 +51,18 @@ public class SwitchFragment extends BaseFragment {
                 if(isChecked){
 
                     String newState =  String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"nop\",\"Switch\":\"on\"}}}}");
+                    imgview.setImageResource(R.drawable.bulbon);
                     ((SecureMainActivity)getActivity()).executeUpdateShadowTask(newState);
                    // getActivity().
                 }else{
 
                     String newState =  String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"nop\",\"Switch\":\"off\"}}}}");
+                    imgview.setImageResource(R.drawable.bulboff);
                     ((SecureMainActivity)getActivity()).executeUpdateShadowTask(newState);
 
                 }
 
-                stateOnOff.setText(((SmartHomeStatus) obj).getState().getReported().getControls().getSwitch());
+
 
             }
         });
@@ -66,10 +72,10 @@ public class SwitchFragment extends BaseFragment {
     @Override
     public void updateFragment(Object object) {
 
-        if (object instanceof SmartHomeStatus) {
+      /*  if (object instanceof SmartHomeStatus) {
             SmartHomeStatus smartHomeStatus = (SmartHomeStatus) object;
             stateOnOff.setText(smartHomeStatus.getState().getReported().getControls().getSwitch());
-        }
+        }*/
 
 
     }

@@ -1,6 +1,7 @@
 package com.smarthome.ui.fragment;
 
 import android.app.Activity;
+import android.media.Image;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,12 +14,14 @@ import com.smarthome.R;
 import com.smarthome.network.model.SmartHomeStatus;
 import com.smarthome.ui.activity.SecureMainActivity;
 
+import static com.smarthome.R.drawable.dooropen;
+
 /**
  * Created by Naveen on 12/3/16.
  */
 
 public class DoorFragment extends BaseFragment {
-    TextView text1,text2,text3;
+    ImageView Frontimage,Backimage;
     Object obj;
 
     //AlaramFragmentDialogueListner mListener;
@@ -26,15 +29,35 @@ public class DoorFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
 
         View view = inflater.inflate(R.layout.doorfragment, container, false);
-       // text1 = (TextView) view.findViewById(R.id.FrontDoor);
-       // text2 = (TextView) view.findViewById(R.id.BackDoor);
-       // text3 = (TextView) view.findViewById(R.id.SideDoor);
+        Frontimage = (ImageView) view.findViewById(R.id.FrontDoor1) ;
+        Backimage = (ImageView) view.findViewById(R.id.BackDoor1) ;
+
+
         //Please add this in your Fragment in order to access doors
         Activity activity = getActivity();
         if(activity instanceof SecureMainActivity){
             SecureMainActivity myactivity = (SecureMainActivity) activity;
             obj = myactivity.GetObject();
         }
+
+        if((((SmartHomeStatus) obj).getState().getReported().getDoors().getFrontDoor()).equalsIgnoreCase("open"))
+        {
+            Frontimage.setImageResource(R.drawable.dooropen);
+        }
+        else if ((((SmartHomeStatus) obj).getState().getReported().getDoors().getFrontDoor()).equalsIgnoreCase("closed")){
+            Frontimage.setImageResource(R.drawable.doorclose);
+
+        }
+        if((((SmartHomeStatus) obj).getState().getReported().getDoors().getBackDoor()).equalsIgnoreCase("open"))
+        {
+            Backimage.setImageResource(R.drawable.dooropen);
+        }
+        else if ((((SmartHomeStatus) obj).getState().getReported().getDoors().getBackDoor()).equalsIgnoreCase("closed")){
+            Backimage.setImageResource(R.drawable.doorclose);
+
+        }
+
+
        // text1.setText(((SmartHomeStatus) obj).getState().getReported().getDoors().getFrontDoor());
        // text2.setText(((SmartHomeStatus) obj).getState().getReported().getDoors().getBackDoor());
        // text2.setText(((SmartHomeStatus) obj).getState().getReported().getDoors().getSideDoor());
@@ -47,9 +70,22 @@ public class DoorFragment extends BaseFragment {
 
         if (object instanceof SmartHomeStatus) {
             SmartHomeStatus smartHomeStatus = (SmartHomeStatus) object;
-           // text1.setText(smartHomeStatus.getState().getReported().getDoors().getFrontDoor());
-           // text2.setText(smartHomeStatus.getState().getReported().getDoors().getBackDoor());
-           // text2.setText(smartHomeStatus.getState().getReported().getDoors().getSideDoor());
+            if((((SmartHomeStatus) obj).getState().getReported().getDoors().getFrontDoor()).equalsIgnoreCase("open"))
+            {
+                Frontimage.setImageResource(R.drawable.dooropen);
+            }
+            else if ((((SmartHomeStatus) obj).getState().getReported().getDoors().getFrontDoor()).equalsIgnoreCase("closed")){
+                Frontimage.setImageResource(R.drawable.doorclose);
+
+            }
+            if((((SmartHomeStatus) obj).getState().getReported().getDoors().getBackDoor()).equalsIgnoreCase("open"))
+            {
+                Backimage.setImageResource(R.drawable.dooropen);
+            }
+            else if ((((SmartHomeStatus) obj).getState().getReported().getDoors().getBackDoor()).equalsIgnoreCase("closed")){
+                Backimage.setImageResource(R.drawable.doorclose);
+
+            }
         }
     }
 }

@@ -18,25 +18,17 @@ final String Extra = "com.smarthome.ui.activity.itemid";
     Fragment fragment = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {//replacing the fragment
-        if (fragment != null) {
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.frame_container, fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
-        }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
         Intent intent = getIntent();
         int id = getIntent().getIntExtra(Extra,0);
         if(id == 1)
         {
-            ProfileFragment fragment =new ProfileFragment();
+             fragment =new ProfileFragment();
 
         } else if(id ==2 ) {
 
-            HistoryFragment fragment = new HistoryFragment();
+             fragment = new HistoryFragment();
         }
         else if(id == 3){
 
@@ -53,5 +45,12 @@ final String Extra = "com.smarthome.ui.activity.itemid";
             }
 
         }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
+}
 

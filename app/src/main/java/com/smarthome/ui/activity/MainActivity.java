@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,23 +25,29 @@ public class MainActivity extends Activity {
             "com.example.yogesh.homeautomation.userName";
     public static String EXTRA_PASSWORD =
             "com.example.yogesh.homeautomation.password";
+    public static String EXTRA_PASSCODE =
+            "com.example.yogesh.homeautomation.password";
 
     //Save User Preference for login
     private static final String PreferID = "prefSetting";
     private static final String PreferUser = "username";
     private static final String PreferPass = "password";
+    private static final String PreferAutoLogin = "AutoLogin";
+    private static final String PreferOneTimePass = "OnTimePass";
     // UI references
     private EditText layoutUserName;
     private EditText layoutPassword;
+    private EditText layoutPassCode;
     Button layoutSignInButton, layoutRequestButton;
-    CheckBox layoutSaveCheck,layoutAutoLogin;
+    CheckBox layoutAutoLogin;
     UserDatabase mydb;
 
     //class field members
-    private String userName, password;
+    private String userName, password,autoLogin,OneTimePass;
 
     //FireBase CLoud masseging members
     private String token;
+    private AppBarLayout appBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +55,21 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         Log.d(msg,"Oncreate called");
 
+        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+
         layoutUserName = (EditText) findViewById(R.id.UserNameID);
         layoutPassword = (EditText) findViewById(R.id.PasswordID);
+        layoutPassCode = (EditText) findViewById(R.id.PasscodeID);
         layoutSignInButton = (Button) findViewById(R.id.LoginID);
         layoutRequestButton = (Button) findViewById(R.id.RequestID);
-        layoutSaveCheck = (CheckBox) findViewById(R.id.SaveCheckBoxID);
         layoutAutoLogin = (CheckBox) findViewById(R.id.AutoLoginID);
+
 
 
         //getting user database for managing data
         mydb = new UserDatabase(getApplicationContext());
         mydb= mydb.open();
+
 
         //setting logoff condition
         mydb.setLogOff("false");
@@ -67,9 +78,23 @@ public class MainActivity extends Activity {
         SharedPreferences sharePref = getSharedPreferences(PreferID,MODE_PRIVATE);
         userName = sharePref.getString(PreferUser,null);
         password = sharePref.getString(PreferPass,null);
+        autoLogin = sharePref.getString(PreferAutoLogin,null);
+        OneTimePass =  sharePref.getString(PreferOneTimePass,null);
         layoutUserName.setText(userName);
         layoutPassword.setText(password);
 
+        if(autoLogin == null && OneTimePass == null)
+        {
+            layoutPassCode.setVisibility(View.VISIBLE);
+
+        }
+        else {
+            layoutPassCode.setVisibility(View.INVISIBLE);
+
+        }
+
+
+        /*
 
         //autologin checking
         if (userName != null )
@@ -77,11 +102,12 @@ public class MainActivity extends Activity {
             mydb.setUserName(userName);
             if (mydb.getAutoLogin()!=null){
                 if (mydb.getAutoLogin().equals("true"))
-                    displayOnScreen("Checing autologin");
+                    displayOnScreen("Checking autologin");
                 displayOnScreen(mydb.getAutoLogin());
                 startNewActivity();
             }
         }
+        */
 
 
 
@@ -96,26 +122,38 @@ public class MainActivity extends Activity {
 
                 Log.d(msg,"Login button press");
 
-                if (password.equals(mydb.getPassword(userName)))
-                {
-                    mydb.setUserName(userName);
-                    //displayOnScreen ("username or password matched");
-                    //set Username and Password for next time.
-                    if (isCheckBox(1))
+
+                if (password.equals(mydb.getPassword(userName))) {
+
+                    if(Checking_condition(layoutPassCode.isShown()))
                     {
-                        getSharedPreferences(PreferID,MODE_PRIVATE)
-                                .edit()
-                                .putString(PreferUser, userName)
-                                .putString(PreferPass,password)
-                                .commit();
-                        //      .apply();
-                    }
+                        //displayOnScreen("one timme");
 
-                    if (isCheckBox(2)){
-                        mydb.setAutoLogin("true");
-                        displayOnScreen("autologin is true");
+                        mydb.setUserName(userName);
+                        mydb.setPasscode("1234");
+                        //displayOnScreen ("username or password matched");
+                        //set Username and Password for next time.
+                        if (isCheckBox())
+                        {
+                            getSharedPreferences(PreferID,MODE_PRIVATE)
+                                    .edit()
+                                    .putString(PreferUser, userName)
+                                    .putString(PreferPass,password)
+                                    .putString(PreferAutoLogin,"true")
+                                    .putString(PreferOneTimePass,"1234")
+                                    .commit();
+                            //      .apply();
+                        }
+                        else
+                        {
+                            getSharedPreferences(PreferID,MODE_PRIVATE)
+                                    .edit()
+                                    .putString(PreferAutoLogin,"false")
+                                    .putString(PreferOneTimePass,"1234")
+                                    .commit();
 
-                    }
+                        }
+
                    /*
                     //FireBase Cloud massaging
                     token= FirebaseInstanceId.getInstance().getToken();
@@ -123,8 +161,14 @@ public class MainActivity extends Activity {
                     displayOnScreen(token);
                     */
 
-                    //System Start
-                    startNewActivity();
+                        //System Start
+                        startNewActivity();
+
+                    }
+                    else{
+                        //displayOnScreen("one timme");
+                    }
+
 
                 }
                 else
@@ -152,6 +196,7 @@ public class MainActivity extends Activity {
             Log.d(msg, "Restoring input strings");
             layoutUserName.setText(savedInstanceState.getString(EXTRA_USERNAME));
             layoutPassword.setText(savedInstanceState.getString(EXTRA_PASSWORD));
+            layoutPassCode.setText(savedInstanceState.getString(EXTRA_PASSCODE));
 
         }
 
@@ -159,17 +204,26 @@ public class MainActivity extends Activity {
 
     }
 
-    private boolean isCheckBox(int i) {
-        boolean box = false;
-        switch (i){
-            case 1:
-                box = layoutSaveCheck.isChecked();
-                break;
-            case 2:
-                box= layoutAutoLogin.isChecked();
-                break;
+
+    private boolean Checking_condition(boolean shown) {
+        boolean condtion =false;
+        if (shown){
+            if (layoutPassCode.getText().toString().equals("1234")){
+                condtion = true;
+            }
+            else{
+                condtion = false;
+            }
         }
-        return box;
+        else {
+            condtion = true;
+        }
+        return condtion;
+    }
+
+    private boolean isCheckBox() {
+
+        return layoutAutoLogin.isChecked();
     }
 
 
@@ -189,6 +243,8 @@ public class MainActivity extends Activity {
                 layoutUserName.getText().toString());
         savedInstanceState.putString(EXTRA_PASSWORD,
                 layoutPassword.getText().toString());
+        savedInstanceState.putString(EXTRA_PASSCODE,
+                layoutPassCode.getText().toString());
         Log.d(msg, "Saving input strings");
     }
 

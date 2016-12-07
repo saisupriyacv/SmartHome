@@ -27,12 +27,15 @@
         android:ems="10"
         android:id="@+id/PasswordID" />
 
-    <CheckBox
-        android:text="@string/Checkbox"
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:checked="true"
-        android:id="@+id/SaveCheckBoxID" />
+        android:inputType="numberDecimal"
+        android:hint="One Time Passcode"
+        android:ems="10"
+        android:visibility="invisible"
+        android:id="@+id/PasscodeID" />
+
 
     <CheckBox
         android:text="@string/AutLogin"

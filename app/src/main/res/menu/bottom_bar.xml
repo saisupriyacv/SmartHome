@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item
+            android:id="@+id/door"
+            android:icon="@drawable/door"
+            android:title="Door Sensor" />
+        <item
+            android:id="@+id/switch_control"
+            android:icon="@drawable/switch_control"
+            android:title="Switch" />
+        <item
+            android:id="@+id/temperature"
+            android:icon="@drawable/temperature_icon"
+            android:title="Temperature" />
+    </menu>

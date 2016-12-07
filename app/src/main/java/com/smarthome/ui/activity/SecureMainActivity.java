@@ -8,8 +8,11 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.Menu;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import android.app.Dialog;
@@ -37,12 +40,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amazonaws.mobileconnectors.iot.AWSIotKeystoreHelper;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnMenuTabSelectedListener;
 import com.smarthome.data.SubscribeToTopic;
 import com.smarthome.data.UserDatabase;
 import com.smarthome.network.GetShadowTask;
@@ -79,7 +86,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class SecureMainActivity extends ActionBarActivity implements NetworkListener, ClientMqttStatusListener ,NavigationView.OnNavigationItemSelectedListener{
+public class SecureMainActivity extends AppCompatActivity implements NetworkListener, ClientMqttStatusListener ,NavigationView.OnNavigationItemSelectedListener{
 
     private static final String LOG_TAG = SecureMainActivity.class.getSimpleName();
     public final String Extra = "com.smarthome.ui.activity.itemid";
@@ -87,7 +94,8 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
     private ImageView mAlaram;
     private TextView mAlaramTxt;
     private Button btn;
-
+    private LinearLayout mAlarmLayout;
+    private FrameLayout frameLayout;
     final Context context = SecureMainActivity.this;
 
     private KeyStore clientKeyStore = null;
@@ -107,45 +115,69 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main__secure);
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mAlarmLayout = (LinearLayout) findViewById(R.id.alarm_layout);
+        frameLayout = (FrameLayout) findViewById(R.id.frame_container);
+
 
         mydb = new UserDatabase(getApplicationContext());
         mydb = mydb.open();
 
 
-        ValueAnimator skyAnim = ObjectAnimator.ofInt
-                (findViewById(R.id.car_layout), "backgroundColor",
-                        Color.rgb(0x66, 0xcc, 0xff), Color.rgb(0x00, 0x66, 0x99));
-        skyAnim.setDuration(22000);
-        skyAnim.setRepeatCount(ValueAnimator.INFINITE);
-        skyAnim.setRepeatMode(ValueAnimator.REVERSE);
-        skyAnim.setEvaluator(new ArgbEvaluator());
-        skyAnim.start();
+//        ValueAnimator skyAnim = ObjectAnimator.ofInt
+//                (findViewById(R.id.car_layout), "backgroundColor",
+//                        Color.rgb(0x66, 0xcc, 0xff), Color.rgb(0x00, 0x66, 0x99));
+//        skyAnim.setDuration(3000);
+//        skyAnim.setRepeatCount(ValueAnimator.INFINITE);
+//        skyAnim.setRepeatMode(ValueAnimator.REVERSE);
+//        skyAnim.setEvaluator(new ArgbEvaluator());
+//        skyAnim.start();
+//
+//        ObjectAnimator cloudAnim6 = ObjectAnimator.ofFloat(findViewById(R.id.cloud6), "x", -300);
+//        cloudAnim6.setDuration(7000);
+//        cloudAnim6.setRepeatCount(ValueAnimator.INFINITE);
+//        cloudAnim6.setRepeatMode(ValueAnimator.REVERSE);
+//        cloudAnim6.start();
+//
+//        ObjectAnimator cloudAnim0 = ObjectAnimator.ofFloat(findViewById(R.id.cloud0), "x", -300);
+//        cloudAnim0.setDuration(2000);
+//        cloudAnim0.setRepeatCount(ValueAnimator.INFINITE);
+//        cloudAnim0.setRepeatMode(ValueAnimator.REVERSE);
+//        cloudAnim0.start();
+//        ObjectAnimator cloudAnim = ObjectAnimator.ofFloat(findViewById(R.id.cloud1), "x", -270);
+//        cloudAnim.setDuration(4000);
+//        cloudAnim.setRepeatCount(ValueAnimator.INFINITE);
+//        cloudAnim.setRepeatMode(ValueAnimator.REVERSE);
+//        cloudAnim.start();
+//        ObjectAnimator cloudAnim2 = ObjectAnimator.ofFloat(findViewById(R.id.cloud2), "x", -250);
+//        cloudAnim2.setDuration(6000);
+//        cloudAnim2.setRepeatCount(ValueAnimator.INFINITE);
+//        cloudAnim2.setRepeatMode(ValueAnimator.REVERSE);
+//        cloudAnim2.start();
+//        ObjectAnimator cloudAnim3 = ObjectAnimator.ofFloat(findViewById(R.id.cloud3), "x", -220);
+//        cloudAnim3.setDuration(3000);
+//        cloudAnim3.setRepeatCount(ValueAnimator.INFINITE);
+//        cloudAnim3.setRepeatMode(ValueAnimator.REVERSE);
+//        cloudAnim3.start();
+//        ObjectAnimator cloudAnim4 = ObjectAnimator.ofFloat(findViewById(R.id.cloud4), "x", -220);
+//        cloudAnim4.setDuration(5000);
+//        cloudAnim4.setRepeatCount(ValueAnimator.INFINITE);
+//        cloudAnim4.setRepeatMode(ValueAnimator.REVERSE);
+//        cloudAnim4.start();
 
 
-        ObjectAnimator cloudAnim = ObjectAnimator.ofFloat(findViewById(R.id.cloud1), "x", -300);
-        cloudAnim.setDuration(7000);
-        cloudAnim.setRepeatCount(ValueAnimator.INFINITE);
-        cloudAnim.setRepeatMode(ValueAnimator.REVERSE);
-        cloudAnim.start();
-        ObjectAnimator cloudAnim2 = ObjectAnimator.ofFloat(findViewById(R.id.cloud2), "x", -300);
-        cloudAnim2.setDuration(5000);
-        cloudAnim2.setRepeatCount(ValueAnimator.INFINITE);
-        cloudAnim2.setRepeatMode(ValueAnimator.REVERSE);
-        cloudAnim2.start();
-        ObjectAnimator cloudAnim3 = ObjectAnimator.ofFloat(findViewById(R.id.cloud3), "x", -300);
-        cloudAnim3.setDuration(3000);
-        cloudAnim3.setRepeatCount(ValueAnimator.INFINITE);
-        cloudAnim3.setRepeatMode(ValueAnimator.REVERSE);
-        cloudAnim3.start();
-
-
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+       Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+       setSupportActionBar(toolbar);
 
         FragmentManager manager=this.getSupportFragmentManager();
 
-
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -162,31 +194,31 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
 
 
 
-        View.OnClickListener listener = new View.OnClickListener() {
-            public void onClick(View view) {
-                Fragment fragment = null;
-                if(view.getId() == R.id.button1){
-                    fragment = new DoorFragment();
-                } else if(view.getId() == R.id.button2) {
-                    fragment = new SwitchFragment();
-                }
-                else if(view.getId() == R.id.tempbtn){
-                    fragment =new TemperatureFragment();
-                }
-                FragmentManager manager = getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.frame_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        };
-
-        Button btn1 = (Button)findViewById(R.id.button1);
-        btn1.setOnClickListener(listener);
-        Button btn2 = (Button)findViewById(R.id.button2);
-        btn2.setOnClickListener(listener);
-        Button btn3 = (Button)findViewById(R.id.tempbtn);
-        btn3.setOnClickListener(listener);
+//        View.OnClickListener listener = new View.OnClickListener() {
+//            public void onClick(View view) {
+//                Fragment fragment = null;
+//                if(view.getId() == R.id.button1){
+//                    fragment = new DoorFragment();
+//                } else if(view.getId() == R.id.button2) {
+//                    fragment = new SwitchFragment();
+//                }
+//                else if(view.getId() == R.id.tempbtn){
+//                    fragment =new TemperatureFragment();
+//                }
+//                FragmentManager manager = getSupportFragmentManager();
+//                FragmentTransaction transaction = manager.beginTransaction();
+//                transaction.replace(R.id.frame_container, fragment);
+//                transaction.addToBackStack(null);
+//                transaction.commit();
+//            }
+//        };
+//
+//        Button btn1 = (Button)findViewById(R.id.button1);
+//        btn1.setOnClickListener(listener);
+//        Button btn2 = (Button)findViewById(R.id.button2);
+//        btn2.setOnClickListener(listener);
+//        Button btn3 = (Button)findViewById(R.id.tempbtn);
+//        btn3.setOnClickListener(listener);
 
 
 
@@ -216,6 +248,26 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
 
         mAlaram = (ImageView) findViewById(R.id.Alaram);
         executeShadowTask();
+
+
+        BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
+    ;
+        bottomBar.setItemsFromMenu(R.menu.bottom_bar, new OnMenuTabSelectedListener() {
+            @Override
+            public void onMenuItemSelected(int itemId) {
+                switch (itemId) {
+                    case R.id.door:
+                      launchFragment(new DoorFragment());
+                        break;
+                    case R.id.switch_control:
+                        launchFragment(new SwitchFragment());
+                        break;
+                    case R.id.temperature:
+                        launchFragment(new TemperatureFragment());
+                        break;
+                }
+            }
+        });
 
 
         mAlaram.setOnClickListener(new View.OnClickListener() {
@@ -274,11 +326,14 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
-                        mAlaramTxt.setText(SelectedText + " " + "Setting " + "......");
-                        Log.d(LOG_TAG, "Text changed on Ok " + rd2.getText());
-                        String newState = String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"%s\"}}}}", SelectedText);
-                        Log.i(LOG_TAG, "Sending data to shadow: " + newState);
-                        executeUpdateShadowTask(newState);
+                        if((SelectedText != null)) {
+                            mAlaramTxt.setText(SelectedText + " " + "Setting " + "......");
+                            Log.d(LOG_TAG, "Text changed on Ok " + rd2.getText());
+                            String newState = String.format("{\"state\":{\"desired\":{\"Controls\":{\"Alaram\":\"%s\"}}}}", SelectedText);
+                            Log.i(LOG_TAG, "Sending data to shadow: " + newState);
+                            executeUpdateShadowTask(newState);
+
+                        }
 
 
                     /*    ProgressDialog dialog1 = ProgressDialog.show(
@@ -292,13 +347,58 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
                 });
 
                 dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                dialog.getWindow().setGravity(Gravity.BOTTOM);
+                dialog.getWindow().setGravity(Gravity.CENTER);
+               // dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.rgb(255,255,224)));
                 dialog.show();
 
 
             }
         });
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setDimensions(getResources().getConfiguration().orientation);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setDimensions(getResources().getConfiguration().orientation);
+    }
+    private void setDimensions(int orientation) {
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mAlarmLayout.getLayoutParams();
+            layoutParams.removeRule(RelativeLayout.CENTER_HORIZONTAL);
+            layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+            mAlarmLayout.setLayoutParams(layoutParams);
+
+            RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) frameLayout.getLayoutParams();
+            layoutParams1.addRule(RelativeLayout.BELOW, R.id.app_bar_layout);
+
+            layoutParams1.removeRule(RelativeLayout.CENTER_VERTICAL);
+            layoutParams1.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+            layoutParams1.addRule(RelativeLayout.CENTER_IN_PARENT);
+            frameLayout.setLayoutParams(layoutParams1);
+
+        } else {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mAlarmLayout.getLayoutParams();
+            layoutParams.removeRule(RelativeLayout.CENTER_VERTICAL);
+            layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            mAlarmLayout.setLayoutParams(layoutParams);
+
+            RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) frameLayout.getLayoutParams();
+            layoutParams1.addRule(RelativeLayout.BELOW, R.id.alarm_layout);
+
+            layoutParams1.removeRule(RelativeLayout.CENTER_HORIZONTAL);
+            layoutParams1.addRule(RelativeLayout.CENTER_VERTICAL);
+
+            layoutParams1.addRule(RelativeLayout.CENTER_IN_PARENT);
+            frameLayout.setLayoutParams(layoutParams1);
+        }
+    }
+
 
     private void launchFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -333,9 +433,10 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
             System.out.println(smartHomeStatus.getState().getReported().getControls().getAlaram());
 
             mAlaramTxt = (TextView) findViewById(R.id.AlaramTxt);
-            mAlaramTxt.setText(smartHomeStatus.getState().getReported().getControls().getAlaram());
+            mAlaramTxt.setText(smartHomeStatus.getState().getReported().getControls().getAlaram().toUpperCase());
 
             BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.frame_container);
+        //    launchFragment(new DoorFragment());
             if (fragment != null && fragment.isVisible()) {
                 fragment.updateFragment(object);
             }
@@ -465,6 +566,7 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
             finish();
 
         }
+
 
         else if (id == R.id.aboutus) {
         Intent intent = new Intent(this, InfoActivity.class);

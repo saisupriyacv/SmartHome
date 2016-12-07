@@ -75,13 +75,13 @@ public class RequestAccess extends Activity {
                     if(verify.hasEightChar(rPassword)){
                         if(rPassword.equals(rConfirmPass)){
                             if(verify.validEmail(rEmail)){
-                                displayOnScreen("Request is Granddted");
+                                //displayOnScreen("Request is Granted");
                                 dbInstance.setUserName(rUserName);
                                 dbInstance.StoreValues(rUserName,rPassword,rEmail);
                                 Intent intentEmail = new Intent(Intent.ACTION_SEND);
-                                intentEmail.putExtra(Intent.EXTRA_EMAIL, new String[]{"yogi.dhada@gmail.com"});
-                                intentEmail.putExtra(Intent.EXTRA_SUBJECT, "Request Access");
-                                intentEmail.putExtra(Intent.EXTRA_TEXT, "Please sene request code");
+                                intentEmail.putExtra(Intent.EXTRA_EMAIL, new String[]{"saisupriyacv@gmail.com"});
+                                intentEmail.putExtra(Intent.EXTRA_SUBJECT, "Smarthome");
+                                intentEmail.putExtra(Intent.EXTRA_TEXT, "Please sene request code for Log in");
                                 intentEmail.setType("message/rfc822");
 
                                 try {

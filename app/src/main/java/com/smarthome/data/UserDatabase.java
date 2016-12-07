@@ -23,6 +23,7 @@ public class UserDatabase {
     private static final String COL_BULBSTATUS = "BULBSTATUS";
     private static final String COL_SWITCHSTATUS = "SWITCHSTATUS";
     private static final String COL_AUTOLOGIN = "AUTOLOGIN";
+    private static final String COL_PASSCODE = "PASSCODE";
 
     private static final String COL_ID = "ID ";
     private static String AutoLogin;
@@ -41,7 +42,7 @@ public class UserDatabase {
     Database_helper helper;
     public  SQLiteDatabase db;
     private String msg = "user database";
-
+    private String Passcode;
 
 
     public UserDatabase(Context _context){
@@ -72,7 +73,7 @@ public class UserDatabase {
     private static final String DATABASE_Homecontrol = "create table " + TABLE_HOMEAUTO +"( "
             + COL_ID +" integer primary key autoincrement,"+  COL_USERNAME + " text,"
             + COL_PASSWORD + " text," + COL_EMAIL +" text,"+ COL_SECURITYMODE + " text," +
-            COL_DOORSTATUS + " text," + COL_SWITCHSTATUS + " text," + COL_BULBSTATUS +" text," + COL_AUTOLOGIN +" text" +"); ";
+            COL_DOORSTATUS + " text," + COL_SWITCHSTATUS + " text," + COL_BULBSTATUS +" text," + COL_PASSCODE +" text," + COL_AUTOLOGIN +" text" +"); ";
 
 
     public void debugTables(){
@@ -90,19 +91,21 @@ public class UserDatabase {
         return getSingleValue(COL_PASSWORD,user,"Password");
     }
     public String getEmail(){
+
+        Email = getSingleValue(COL_EMAIL,getUserName(),"Email");
         return Email;
     }
     public String getSecurityMode(){
-        return Security_Mode;
+        return getSingleValue(COL_SECURITYMODE,getUserName(),"SecurityMode");
     }
     public String getDoor_Status(){
-        return Door_Status;
+        return getSingleValue(COL_DOORSTATUS,getUserName(),"DoorStatus");
     }
     public String getBulbStatus(){
-        return Bulb_Status;
+        return getSingleValue(COL_BULBSTATUS,getUserName(),"BulbStatus");
     }
     public String getSwitchStatus(){
-        return Switch_Status;
+        return getSingleValue(COL_SWITCHSTATUS,getUserName(),"SwitchStatus");
     }
 
     public String getAutoLogin(){
@@ -159,6 +162,17 @@ public class UserDatabase {
     }
 
 
+    public String getPasscode() {
+        return Passcode;
+
+    }
+
+    public void setPasscode(String passcode) {
+        Passcode = passcode;
+        UpdateValues(COL_PASSCODE,getUserName(),Passcode);
+    }
+
+
     public void StoreValues(String value_user,String value_pass, String value_email) {
 
         Log.d(msg, ":StoreValues called");
@@ -172,8 +186,13 @@ public class UserDatabase {
         values.put(COL_SWITCHSTATUS, "default_value");
         values.put(COL_BULBSTATUS, "default_value");
         values.put(COL_AUTOLOGIN,"default value");
+        values.put(COL_PASSCODE,"default value");
 
         db.insertOrThrow(TABLE_HOMEAUTO, null, values);
+        setEmail(value_email);
+        setUserName(value_user);
+        setPassword(value_pass);
+
     }
     public void UpdateValues(String column_name, String user_name ,String column_values){
 
@@ -218,6 +237,10 @@ public class UserDatabase {
                     Singlevalue = cursor_single.getString(cursor_single.getColumnIndex(COL_BULBSTATUS));
                     break;
                 case "AutoLogin":
+                    Singlevalue = cursor_single.getString(cursor_single.getColumnIndex(COL_AUTOLOGIN));
+                    break;
+
+                case "Passcode":
                     Singlevalue = cursor_single.getString(cursor_single.getColumnIndex(COL_AUTOLOGIN));
                     break;
             }

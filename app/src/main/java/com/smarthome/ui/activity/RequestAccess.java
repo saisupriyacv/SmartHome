@@ -41,9 +41,9 @@ public class RequestAccess extends Activity {
         dbInstance= dbInstance.open();
 
 
-        if (dbInstance.getAutoLogin()!=null)
+        if (dbInstance.getLogOff()!=null)
         {
-            if(dbInstance.getAutoLogin().equals("true")){
+            if(dbInstance.getLogOff().equals("true")){
                 finish();
             }
         }

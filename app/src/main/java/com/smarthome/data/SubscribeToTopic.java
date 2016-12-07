@@ -112,6 +112,7 @@ public class SubscribeToTopic implements AWSIotMqttNewMessageCallback  {
             if(!(desired.getState().getReported().getControls().getAlaram().equals( reported.getState().getReported().getControls().getAlaram() ))){
                 Log.d(TAG,"Alaram  not equal");
                 Result += "Alaram is now " + desired.getState().getReported().getControls().getAlaram();
+
                 reported.getState().getReported().getControls().setAlaram(desired.getState().getReported().getControls().getAlaram());
 
             }

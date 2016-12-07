@@ -32,7 +32,7 @@ public class TemperatureFragment extends BaseFragment {
             obj = myactivity.GetObject();
         }
 
-        mtextview.setText((((SmartHomeStatus) obj).getState().getReported().getTemperature().getTemperature()));
+        mtextview.setText((((SmartHomeStatus) obj).getState().getReported().getTemperature().getTemperature()) + "F");
         Log.d( "" , "temperature" + (((SmartHomeStatus) obj).getState().getReported().getTemperature().getTemperature()));
         return view;
     }

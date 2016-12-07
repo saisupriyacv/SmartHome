@@ -434,6 +434,15 @@ public class SecureMainActivity extends AppCompatActivity implements NetworkList
 
             mAlaramTxt = (TextView) findViewById(R.id.AlaramTxt);
             mAlaramTxt.setText(smartHomeStatus.getState().getReported().getControls().getAlaram().toUpperCase());
+            ImageView img = (ImageView) findViewById(R.id.lock);
+            if(mAlaramTxt.getText().equals("DISARM")){
+                img.setImageResource(R.drawable.unlock);
+            }
+            else
+            {
+                img.setImageResource(R.drawable.locked);
+            }
+
 
             BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.frame_container);
         //    launchFragment(new DoorFragment());

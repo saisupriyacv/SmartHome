@@ -34,6 +34,12 @@
         android:checked="true"
         android:id="@+id/SaveCheckBoxID" />
 
+    <CheckBox
+        android:text="@string/AutLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/AutoLoginID" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

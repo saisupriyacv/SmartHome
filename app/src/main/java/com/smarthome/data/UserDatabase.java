@@ -22,7 +22,12 @@ public class UserDatabase {
     private static final String COL_DOORSTATUS = "DOORSTATUS";
     private static final String COL_BULBSTATUS = "BULBSTATUS";
     private static final String COL_SWITCHSTATUS = "SWITCHSTATUS";
+    private static final String COL_AUTOLOGIN = "AUTOLOGIN";
+
     private static final String COL_ID = "ID ";
+    private static String AutoLogin;
+    private static String SignOut;
+
 
     private String ID;
     private String User_name;
@@ -67,7 +72,7 @@ public class UserDatabase {
     private static final String DATABASE_Homecontrol = "create table " + TABLE_HOMEAUTO +"( "
             + COL_ID +" integer primary key autoincrement,"+  COL_USERNAME + " text,"
             + COL_PASSWORD + " text," + COL_EMAIL +" text,"+ COL_SECURITYMODE + " text," +
-            COL_DOORSTATUS + " text," + COL_SWITCHSTATUS + " text," + COL_BULBSTATUS +" text" +"); ";
+            COL_DOORSTATUS + " text," + COL_SWITCHSTATUS + " text," + COL_BULBSTATUS +" text," + COL_AUTOLOGIN +" text" +"); ";
 
 
     public void debugTables(){
@@ -98,6 +103,14 @@ public class UserDatabase {
     }
     public String getSwitchStatus(){
         return Switch_Status;
+    }
+
+    public String getAutoLogin(){
+        AutoLogin = getSingleValue(COL_AUTOLOGIN,getUserName(),"AutoLogin");
+        return AutoLogin;
+    }
+    public String getLogOff(){
+        return SignOut;
     }
 
     public static String getDatabaseStringHome() {
@@ -137,6 +150,13 @@ public class UserDatabase {
         UpdateValues(COL_SWITCHSTATUS,getUserName(),Switch_Status);
 
     }
+    public void setAutoLogin(String autoLogin){
+        AutoLogin= autoLogin;
+        UpdateValues(COL_AUTOLOGIN,getUserName(),AutoLogin);
+    }
+    public void setLogOff(String singout){
+        SignOut= singout;
+    }
 
 
     public void StoreValues(String value_user,String value_pass, String value_email) {
@@ -151,6 +171,7 @@ public class UserDatabase {
         values.put(COL_DOORSTATUS, "default_value");
         values.put(COL_SWITCHSTATUS, "default_value");
         values.put(COL_BULBSTATUS, "default_value");
+        values.put(COL_AUTOLOGIN,"default value");
 
         db.insertOrThrow(TABLE_HOMEAUTO, null, values);
     }
@@ -195,6 +216,9 @@ public class UserDatabase {
                     break;
                 case "BulbStatus":
                     Singlevalue = cursor_single.getString(cursor_single.getColumnIndex(COL_BULBSTATUS));
+                    break;
+                case "AutoLogin":
+                    Singlevalue = cursor_single.getString(cursor_single.getColumnIndex(COL_AUTOLOGIN));
                     break;
             }
 

@@ -2,6 +2,7 @@ package com.smarthome.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +36,17 @@ public class RequestAccess extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_access);
         Log.d(msg,"Oncreate called");
+        //getting object of user database for managing data using sql
+        dbInstance = new UserDatabase(getApplicationContext());
+        dbInstance= dbInstance.open();
+
+
+        if (dbInstance.getAutoLogin()!=null)
+        {
+            if(dbInstance.getAutoLogin().equals("true")){
+                finish();
+            }
+        }
 
         //UI interface
         layoutUser = (EditText) findViewById(R.id.UserID);
@@ -44,9 +56,6 @@ public class RequestAccess extends Activity {
         layoutSendButton = (Button) findViewById(R.id.SendID);
         layoutCancelButton = (Button) findViewById(R.id.CancelID);
 
-        //getting object of user database for managing data using sql
-        dbInstance = new UserDatabase(getApplicationContext());
-        dbInstance= dbInstance.open();
 
         //getting object for verify and action class
         verify = new VerifyAction();
@@ -69,6 +78,20 @@ public class RequestAccess extends Activity {
                                 displayOnScreen("Request is Granddted");
                                 dbInstance.setUserName(rUserName);
                                 dbInstance.StoreValues(rUserName,rPassword,rEmail);
+                                Intent intentEmail = new Intent(Intent.ACTION_SEND);
+                                intentEmail.putExtra(Intent.EXTRA_EMAIL, new String[]{"yogi.dhada@gmail.com"});
+                                intentEmail.putExtra(Intent.EXTRA_SUBJECT, "Request Access");
+                                intentEmail.putExtra(Intent.EXTRA_TEXT, "Please sene request code");
+                                intentEmail.setType("message/rfc822");
+
+                                try {
+                                    startActivity(Intent.createChooser(intentEmail, "Choose email for request code"));
+                                    finish();
+                                    Log.d(msg,"Finished sending email...");
+                                } catch (android.content.ActivityNotFoundException ex) {
+                                    displayOnScreen("There is no email client installed");
+                                }
+
                                 finish();
                             }
                             else

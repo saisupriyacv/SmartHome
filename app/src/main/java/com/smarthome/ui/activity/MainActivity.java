@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
     private EditText layoutUserName;
     private EditText layoutPassword;
     Button layoutSignInButton, layoutRequestButton;
-    CheckBox layoutSaveCheck;
+    CheckBox layoutSaveCheck,layoutAutoLogin;
     UserDatabase mydb;
 
     //class field members
@@ -53,17 +53,35 @@ public class MainActivity extends Activity {
         layoutSignInButton = (Button) findViewById(R.id.LoginID);
         layoutRequestButton = (Button) findViewById(R.id.RequestID);
         layoutSaveCheck = (CheckBox) findViewById(R.id.SaveCheckBoxID);
+        layoutAutoLogin = (CheckBox) findViewById(R.id.AutoLoginID);
+
 
         //getting user database for managing data
         mydb = new UserDatabase(getApplicationContext());
         mydb= mydb.open();
 
+        //setting logoff condition
+        mydb.setLogOff("false");
 
+        //Save preference
         SharedPreferences sharePref = getSharedPreferences(PreferID,MODE_PRIVATE);
         userName = sharePref.getString(PreferUser,null);
         password = sharePref.getString(PreferPass,null);
         layoutUserName.setText(userName);
         layoutPassword.setText(password);
+
+
+        //autologin checking
+        if (userName != null )
+        {
+            mydb.setUserName(userName);
+            if (mydb.getAutoLogin()!=null){
+                if (mydb.getAutoLogin().equals("true"))
+                    displayOnScreen("Checing autologin");
+                displayOnScreen(mydb.getAutoLogin());
+                startNewActivity();
+            }
+        }
 
 
 
@@ -81,9 +99,9 @@ public class MainActivity extends Activity {
                 if (password.equals(mydb.getPassword(userName)))
                 {
                     mydb.setUserName(userName);
-                    displayOnScreen ("username or password matched");
+                    //displayOnScreen ("username or password matched");
                     //set Username and Password for next time.
-                    if (isCheckBox())
+                    if (isCheckBox(1))
                     {
                         getSharedPreferences(PreferID,MODE_PRIVATE)
                                 .edit()
@@ -91,6 +109,12 @@ public class MainActivity extends Activity {
                                 .putString(PreferPass,password)
                                 .commit();
                         //      .apply();
+                    }
+
+                    if (isCheckBox(2)){
+                        mydb.setAutoLogin("true");
+                        displayOnScreen("autologin is true");
+
                     }
                    /*
                     //FireBase Cloud massaging
@@ -100,8 +124,7 @@ public class MainActivity extends Activity {
                     */
 
                     //System Start
-                    Intent intent = new Intent(MainActivity.this,SecureMainActivity.class);
-                    startActivity(intent);
+                    startNewActivity();
 
                 }
                 else
@@ -136,13 +159,28 @@ public class MainActivity extends Activity {
 
     }
 
-    private boolean isCheckBox() {
-        return layoutSaveCheck.isChecked();
+    private boolean isCheckBox(int i) {
+        boolean box = false;
+        switch (i){
+            case 1:
+                box = layoutSaveCheck.isChecked();
+                break;
+            case 2:
+                box= layoutAutoLogin.isChecked();
+                break;
+        }
+        return box;
     }
 
 
     public void displayOnScreen (String displayStringLong){
         Toast.makeText(getApplicationContext(), displayStringLong ,Toast.LENGTH_LONG).show();
+    }
+
+    public void startNewActivity(){
+        Intent intent = new Intent(MainActivity.this,SecureMainActivity.class);
+        startActivity(intent);
+
     }
 
     @Override

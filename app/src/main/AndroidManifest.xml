@@ -22,21 +22,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.SecureMainActivity"
             android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.activity.RequestAccess"
             android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -48,7 +43,8 @@
         <activity
             android:name=".ui.activity.NotificationReceiverActivity"
             android:label="@string/title_activity_notification_receiver"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.activity.InfoActivity"></activity>
     </application>
 
 </manifest>

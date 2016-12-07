@@ -27,4 +27,5 @@
     <string name="cancelButton">Cancel</string>
     <string name="title_activity_notification_receiver">NotificationReceiverActivity</string>
     <string name="AutLogin">AutoLogin</string>
+    <string name="title_activity_info">InfoActivity</string>
 </resources>

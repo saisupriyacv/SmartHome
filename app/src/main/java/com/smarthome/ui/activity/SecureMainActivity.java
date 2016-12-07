@@ -81,6 +81,7 @@ import android.view.View;
 public class SecureMainActivity extends ActionBarActivity implements NetworkListener, ClientMqttStatusListener ,NavigationView.OnNavigationItemSelectedListener{
 
     private static final String LOG_TAG = SecureMainActivity.class.getSimpleName();
+    public final String Extra = "com.smarthome.ui.activity.itemid";
 
     private ImageView mAlaram;
     private TextView mAlaramTxt;
@@ -475,8 +476,11 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
 
         int id = item.getItemId();
 
-        if (id == R.id.profile) {
-               fragment = new ProfileFragment();
+        if (id == R.id.Signout) {
+//            Intent intent = new Intent(this, InfoActivity.class);
+//            intent.putExtra(Extra,id);
+//            startActivity(intent);
+
 
         } else if (id == R.id.history) {
                fragment = new HistoryFragment();

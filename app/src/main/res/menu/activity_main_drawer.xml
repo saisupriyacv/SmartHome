@@ -22,7 +22,7 @@
                 android:icon="@color/orange"
                 android:title="Info" />
             <item
-                android:id="@+id/settings"
+                android:id="@+id/Signout"
                 android:background="#ffffcc00"
                 android:icon="@color/orange"
                 android:title="Sign Out" />

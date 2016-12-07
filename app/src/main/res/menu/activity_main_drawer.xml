@@ -20,12 +20,12 @@
                 android:id="@+id/aboutus"
                 android:background="#ffffcc00"
                 android:icon="@color/orange"
-                android:title="About Us" />
+                android:title="Info" />
             <item
                 android:id="@+id/settings"
                 android:background="#ffffcc00"
                 android:icon="@color/orange"
-                android:title="Settings" />
+                android:title="Sign Out" />
         </menu>
     </item>
 

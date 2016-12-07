@@ -11,6 +11,10 @@
     tools:context="com.smarthome.ui.activity.InfoActivity">
    <FrameLayout
        android:layout_width="wrap_content"
-       android:layout_height="wrap_content"></FrameLayout>
+       android:layout_height="wrap_content"
+       android:id="@+id/frame_container1"
+       >
+
+   </FrameLayout>
 
 </RelativeLayout>

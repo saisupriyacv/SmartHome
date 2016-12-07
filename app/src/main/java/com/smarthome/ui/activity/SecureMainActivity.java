@@ -44,6 +44,7 @@ import android.widget.TextView;
 import com.amazonaws.mobileconnectors.iot.AWSIotKeystoreHelper;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
 import com.smarthome.data.SubscribeToTopic;
+import com.smarthome.data.UserDatabase;
 import com.smarthome.network.GetShadowTask;
 import com.smarthome.network.UpdateShadowTask;
 import com.smarthome.ui.SecureAWSIotMqttClientManager;
@@ -95,6 +96,7 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
 
     NotificationManager manager;
     Notification myNotication;
+    UserDatabase mydb;
 
     private SubscribeToTopic subscribeToTopic;
     private final String topic = "$aws/things/SmartHome/shadow/update";
@@ -105,6 +107,9 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main__secure);
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        mydb = new UserDatabase(getApplicationContext());
+        mydb = mydb.open();
 
 
         ValueAnimator skyAnim = ObjectAnimator.ofInt
@@ -227,7 +232,7 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
             Log.i(LOG_TAG, "Cert/key was not found in keystore - creating new key and certificate.");
             new VerifyCertificateTask(this).execute();
         } else {
-            connectIotManager();
+            connectIotManager(clientKeyStore);
         }
 
         mAlaram = (ImageView) findViewById(R.id.Alaram);
@@ -387,7 +392,7 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
         }
     }
 
-    public void connectIotManager() {
+    public void connectIotManager(KeyStore clientKeyStore ) {
         ShadowApplication.getInstance().getIotManager().connect(clientKeyStore,
                 new SecureAWSIotMqttClientManager(this));
     }
@@ -476,24 +481,30 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
 
         int id = item.getItemId();
 
-        if (id == R.id.Signout) {
-//            Intent intent = new Intent(this, InfoActivity.class);
-//            intent.putExtra(Extra,id);
-//            startActivity(intent);
+        if(id == R.id.Signout){
+            mydb.setLogOff("true");
+            finish();
+
+        }
+
+        else if (id == R.id.profile) {
+            Intent intent = new Intent(this, InfoActivity.class);
+            intent.putExtra(Extra,1);
+            startActivity(intent);
 
 
         } else if (id == R.id.history) {
-               fragment = new HistoryFragment();
+            Intent intent = new Intent(this, InfoActivity.class);
+            intent.putExtra(Extra,2);
+            startActivity(intent);
 
         }
-        //replacing the fragment
-        if (fragment != null) {
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.frame_container, fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
-        }
+        else if (id == R.id.aboutus) {
+        Intent intent = new Intent(this, InfoActivity.class);
+        intent.putExtra(Extra,3);
+        startActivity(intent);
+
+    }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

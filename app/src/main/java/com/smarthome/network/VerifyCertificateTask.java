@@ -86,7 +86,7 @@ public class VerifyCertificateTask extends AsyncTask<Void, Void, KeyStore> {
     @Override
     protected void onPostExecute(KeyStore keyStore) {
         if (mActivity instanceof SecureMainActivity) {
-            ((SecureMainActivity) mActivity).connectIotManager();
+            ((SecureMainActivity) mActivity).connectIotManager(keyStore);
         }
     }
 }

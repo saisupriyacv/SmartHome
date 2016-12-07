@@ -115,43 +115,29 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
         ValueAnimator skyAnim = ObjectAnimator.ofInt
                 (findViewById(R.id.car_layout), "backgroundColor",
                         Color.rgb(0x66, 0xcc, 0xff), Color.rgb(0x00, 0x66, 0x99));
-        skyAnim.setDuration(3000);
+        skyAnim.setDuration(22000);
         skyAnim.setRepeatCount(ValueAnimator.INFINITE);
         skyAnim.setRepeatMode(ValueAnimator.REVERSE);
         skyAnim.setEvaluator(new ArgbEvaluator());
         skyAnim.start();
 
-        ObjectAnimator cloudAnim6 = ObjectAnimator.ofFloat(findViewById(R.id.cloud6), "x", -300);
-        cloudAnim6.setDuration(7000);
-        cloudAnim6.setRepeatCount(ValueAnimator.INFINITE);
-        cloudAnim6.setRepeatMode(ValueAnimator.REVERSE);
-        cloudAnim6.start();
 
-        ObjectAnimator cloudAnim0 = ObjectAnimator.ofFloat(findViewById(R.id.cloud0), "x", -300);
-        cloudAnim0.setDuration(2000);
-        cloudAnim0.setRepeatCount(ValueAnimator.INFINITE);
-        cloudAnim0.setRepeatMode(ValueAnimator.REVERSE);
-        cloudAnim0.start();
-        ObjectAnimator cloudAnim = ObjectAnimator.ofFloat(findViewById(R.id.cloud1), "x", -270);
-        cloudAnim.setDuration(4000);
+        ObjectAnimator cloudAnim = ObjectAnimator.ofFloat(findViewById(R.id.cloud1), "x", -300);
+        cloudAnim.setDuration(7000);
         cloudAnim.setRepeatCount(ValueAnimator.INFINITE);
         cloudAnim.setRepeatMode(ValueAnimator.REVERSE);
         cloudAnim.start();
-        ObjectAnimator cloudAnim2 = ObjectAnimator.ofFloat(findViewById(R.id.cloud2), "x", -250);
-        cloudAnim2.setDuration(6000);
+        ObjectAnimator cloudAnim2 = ObjectAnimator.ofFloat(findViewById(R.id.cloud2), "x", -300);
+        cloudAnim2.setDuration(5000);
         cloudAnim2.setRepeatCount(ValueAnimator.INFINITE);
         cloudAnim2.setRepeatMode(ValueAnimator.REVERSE);
         cloudAnim2.start();
-        ObjectAnimator cloudAnim3 = ObjectAnimator.ofFloat(findViewById(R.id.cloud3), "x", -220);
+        ObjectAnimator cloudAnim3 = ObjectAnimator.ofFloat(findViewById(R.id.cloud3), "x", -300);
         cloudAnim3.setDuration(3000);
         cloudAnim3.setRepeatCount(ValueAnimator.INFINITE);
         cloudAnim3.setRepeatMode(ValueAnimator.REVERSE);
         cloudAnim3.start();
-        ObjectAnimator cloudAnim4 = ObjectAnimator.ofFloat(findViewById(R.id.cloud4), "x", -220);
-        cloudAnim4.setDuration(5000);
-        cloudAnim4.setRepeatCount(ValueAnimator.INFINITE);
-        cloudAnim4.setRepeatMode(ValueAnimator.REVERSE);
-        cloudAnim4.start();
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -159,14 +145,7 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
 
         FragmentManager manager=this.getSupportFragmentManager();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -487,18 +466,6 @@ public class SecureMainActivity extends ActionBarActivity implements NetworkList
 
         }
 
-        else if (id == R.id.profile) {
-            Intent intent = new Intent(this, InfoActivity.class);
-            intent.putExtra(Extra,1);
-            startActivity(intent);
-
-
-        } else if (id == R.id.history) {
-            Intent intent = new Intent(this, InfoActivity.class);
-            intent.putExtra(Extra,2);
-            startActivity(intent);
-
-        }
         else if (id == R.id.aboutus) {
         Intent intent = new Intent(this, InfoActivity.class);
         intent.putExtra(Extra,3);

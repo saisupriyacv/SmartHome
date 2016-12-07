@@ -23,45 +23,24 @@
              android:padding="2dp" />
 
 
-         <ImageView
-             android:id="@+id/cloud6"
-             android:layout_width="150dp"
-             android:layout_height="150dp"
-             android:layout_marginTop="20dp"
-             android:layout_marginRight="150dp"
-             android:contentDescription="@string/cloud"
-             android:paddingLeft="50dp"
-             android:paddingTop="30dp"
-             android:src="@drawable/tempicon2" />
-
-         <ImageView
-             android:id="@+id/cloud0"
-             android:layout_width="150dp"
-             android:layout_height="150dp"
-             android:layout_marginTop="20dp"
-             android:layout_marginLeft="50dp"
-             android:contentDescription="@string/cloud"
-             android:paddingLeft="50dp"
-             android:paddingTop="30dp"
-             android:src="@drawable/light" />
 
          <ImageView
              android:id="@+id/cloud1"
              android:layout_width="150dp"
              android:layout_height="150dp"
-             android:layout_marginTop="70dp"
-             android:layout_marginLeft="170dp"
+             android:layout_marginTop="10dp"
+             android:layout_marginLeft="10dp"
              android:contentDescription="@string/cloud"
              android:paddingLeft="80dp"
              android:paddingTop="50dp"
-             android:src="@drawable/extra_1" />
+             android:src="@drawable/homeiconmov" />
 
          <ImageView
              android:id="@+id/cloud2"
-             android:layout_width="150dp"
-             android:layout_height="150dp"
+             android:layout_width="100dp"
+             android:layout_height="100dp"
              android:layout_marginLeft="170dp"
-             android:layout_marginTop="70dp"
+             android:layout_marginTop="20dp"
              android:contentDescription="@string/cloud"
              android:paddingLeft="50dp"
              android:paddingTop="40dp"
@@ -69,8 +48,8 @@
 
          <ImageView
              android:id="@+id/cloud3"
-             android:layout_width="200dp"
-             android:layout_height="200dp"
+             android:layout_width="130dp"
+             android:layout_height="130dp"
              android:layout_marginTop="20dp"
              android:layout_marginLeft="100dp"
              android:contentDescription="@string/cloud"
@@ -78,16 +57,6 @@
              android:paddingTop="50dp"
              android:src="@drawable/settings" />
 
-         <ImageView
-             android:id="@+id/cloud4"
-             android:layout_width="200dp"
-             android:layout_height="200dp"
-             android:layout_marginTop="50dp"
-             android:layout_marginLeft="80dp"
-             android:contentDescription="@string/cloud"
-             android:paddingLeft="80dp"
-             android:paddingTop="50dp"
-             android:src="@drawable/bright" />
 
          <ImageView
              android:id="@+id/window"
@@ -112,6 +81,9 @@
                  android:layout_below="@+id/Alaram"
                  android:layout_centerHorizontal="true"
                  android:id="@+id/AlaramTxt"
+                 android:textStyle="bold"
+                 android:textSize="30dp"
+                 android:textColor="#ffffff"
                  tools:ignore="HardcodedText" />
 
 

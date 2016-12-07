@@ -22,16 +22,9 @@ final String Extra = "com.smarthome.ui.activity.itemid";
         setContentView(R.layout.activity_info);
         Intent intent = getIntent();
         int id = getIntent().getIntExtra(Extra,0);
-        if(id == 1)
-        {
-             fragment =new ProfileFragment();
+         if(id == 3){
 
-        } else if(id ==2 ) {
-
-             fragment = new HistoryFragment();
-        }
-        else if(id == 3){
-
+            fragment = new HistoryFragment();
 
         }
 

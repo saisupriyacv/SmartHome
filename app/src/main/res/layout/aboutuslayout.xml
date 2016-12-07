@@ -1,0 +1,55 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#aa000000"
+
+    >
+
+    <TextView
+        android:id="@+id/text_view1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textColor="#ffffff"
+
+        android:text="Make your connected home more secure \n\nThe main aim of this app is security and homeautomation with the help of IOT. This application secures the family and their belongings from intruders."
+
+
+        />
+
+    <TextView
+        android:id="@+id/text_view0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textColor="#ffffff"
+        android:text="\nDoor Status  \nIt will let you know status of all doors in your home."
+        android:maxLines="4"
+        />
+
+
+    <TextView
+        android:id="@+id/text_view2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textColor="#ffffff"
+        android:text="\nSwitch Control \n Using the switch we can control all switches in a home. \nLine number 3"
+        android:maxLines="4"
+        />
+
+    <TextView
+        android:id="@+id/text_view3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textColor="#ffffff"
+        android:text="\nTemperature \nThis will give current temperature of room."
+        android:minLines="4"
+        />
+
+
+</LinearLayout>

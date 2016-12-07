@@ -28,4 +28,7 @@
     <string name="title_activity_notification_receiver">NotificationReceiverActivity</string>
     <string name="AutLogin">AutoLogin</string>
     <string name="title_activity_info">InfoActivity</string>
+    <string name="Multiline_Text_By_N">
+        Line number 1 \nLine number 2
+    </string>
 </resources>

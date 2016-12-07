@@ -15,7 +15,7 @@ public class HistoryFragment extends android.support.v4.app.Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
 
-        View view = inflater.inflate(R.layout.historyfragment, container, false);
+        View view = inflater.inflate(R.layout.aboutuslayout, container, false);
 
 
         return view;

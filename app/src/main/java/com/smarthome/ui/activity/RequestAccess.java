@@ -81,7 +81,7 @@ public class RequestAccess extends Activity {
                                 Intent intentEmail = new Intent(Intent.ACTION_SEND);
                                 intentEmail.putExtra(Intent.EXTRA_EMAIL, new String[]{"saisupriyacv@gmail.com"});
                                 intentEmail.putExtra(Intent.EXTRA_SUBJECT, "Smarthome");
-                                intentEmail.putExtra(Intent.EXTRA_TEXT, "Please sene request code for Log in");
+                                intentEmail.putExtra(Intent.EXTRA_TEXT, "Please send request code for Log in");
                                 intentEmail.setType("message/rfc822");
 
                                 try {

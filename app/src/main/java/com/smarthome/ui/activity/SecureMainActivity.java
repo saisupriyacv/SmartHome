@@ -255,8 +255,11 @@ public class SecureMainActivity extends AppCompatActivity implements NetworkList
         bottomBar.setItemsFromMenu(R.menu.bottom_bar, new OnMenuTabSelectedListener() {
             @Override
             public void onMenuItemSelected(int itemId) {
+                executeShadowTask();
+
                 switch (itemId) {
                     case R.id.door:
+
                       launchFragment(new DoorFragment());
                         break;
                     case R.id.switch_control:

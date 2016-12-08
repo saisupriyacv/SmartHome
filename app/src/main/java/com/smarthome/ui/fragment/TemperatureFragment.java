@@ -42,7 +42,7 @@ public class TemperatureFragment extends BaseFragment {
 
         if (object instanceof SmartHomeStatus) {
             SmartHomeStatus smartHomeStatus = (SmartHomeStatus) object;
-            mtextview.setText(smartHomeStatus.getState().getReported().getTemperature().getTemperature());
+            mtextview.setText(smartHomeStatus.getState().getReported().getTemperature().getTemperature() + "F");
 
         }
 

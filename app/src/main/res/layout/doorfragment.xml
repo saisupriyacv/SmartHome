@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:paddingLeft="30dp"
+            android:paddingLeft="29dp"
             android:gravity="center"
             android:src="@drawable/doorclose"
             android:id="@+id/FrontDoor1"/>
@@ -78,11 +78,10 @@
 
 
         <ImageView
-            android:layout_width="match_parent"
+            android:layout_width="114dp"
             android:layout_height="80dp"
             android:layout_marginLeft="10dp"
             android:paddingLeft="30dp"
-            android:layout_weight="1"
             android:gravity="center"
             android:src="@drawable/dooropen"
             android:id="@+id/BackDoor1"/>

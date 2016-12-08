@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -47,15 +46,12 @@ public class MainActivity extends Activity {
 
     //FireBase CLoud masseging members
     private String token;
-    private AppBarLayout appBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(msg,"Oncreate called");
-
-        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
 
         layoutUserName = (EditText) findViewById(R.id.UserNameID);
         layoutPassword = (EditText) findViewById(R.id.PasswordID);
@@ -94,20 +90,34 @@ public class MainActivity extends Activity {
         }
 
 
-        /*
+        if (autoLogin!=null){
+            if (autoLogin.equals("true")) {
+                //displayOnScreen("Checking autologin");
+                //displayOnScreen(mydb.getAutoLogin());
+                startNewActivity();
+            }
+        }
 
+
+
+
+
+/*
         //autologin checking
         if (userName != null )
         {
             mydb.setUserName(userName);
             if (mydb.getAutoLogin()!=null){
-                if (mydb.getAutoLogin().equals("true"))
+                if (mydb.getAutoLogin().equals("true")) {
+
                     displayOnScreen("Checking autologin");
-                displayOnScreen(mydb.getAutoLogin());
-                startNewActivity();
+                    displayOnScreen(mydb.getAutoLogin());
+                    startNewActivity();
+                }
             }
         }
-        */
+       */
+
 
 
 
@@ -134,7 +144,9 @@ public class MainActivity extends Activity {
                         //displayOnScreen ("username or password matched");
                         //set Username and Password for next time.
                         if (isCheckBox())
+
                         {
+                            displayOnScreen("true check box");
                             getSharedPreferences(PreferID,MODE_PRIVATE)
                                     .edit()
                                     .putString(PreferUser, userName)
@@ -146,11 +158,13 @@ public class MainActivity extends Activity {
                         }
                         else
                         {
+                            displayOnScreen("false check box");
                             getSharedPreferences(PreferID,MODE_PRIVATE)
                                     .edit()
                                     .putString(PreferAutoLogin,"false")
                                     .putString(PreferOneTimePass,"1234")
                                     .commit();
+                            mydb.setAutoLogin("false");
 
                         }
 
@@ -228,7 +242,7 @@ public class MainActivity extends Activity {
 
 
     public void displayOnScreen (String displayStringLong){
-        Toast.makeText(getApplicationContext(), displayStringLong ,Toast.LENGTH_LONG).show();
+      //  Toast.makeText(getApplicationContext(), displayStringLong ,Toast.LENGTH_LONG).show();
     }
 
     public void startNewActivity(){

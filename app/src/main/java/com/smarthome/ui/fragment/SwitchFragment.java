@@ -72,10 +72,19 @@ public class SwitchFragment extends BaseFragment {
     @Override
     public void updateFragment(Object object) {
 
-      /*  if (object instanceof SmartHomeStatus) {
+       if (object instanceof SmartHomeStatus) {
             SmartHomeStatus smartHomeStatus = (SmartHomeStatus) object;
-            stateOnOff.setText(smartHomeStatus.getState().getReported().getControls().getSwitch());
-        }*/
+            if((smartHomeStatus.getState().getReported().getControls().getSwitch()).equalsIgnoreCase("on"))
+           {
+               imgview.setImageResource(R.drawable.bulbon);
+
+           }
+           else
+           {
+               imgview.setImageResource(R.drawable.bulboff);
+
+           }
+        }
 
 
     }
